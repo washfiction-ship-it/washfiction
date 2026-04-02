@@ -870,6 +870,918 @@
       </div>
     </div>
 
+    <div class="reveal" style="background:var(--card);border:0.5px solid var(--border);border-radius:8px;overflow:hidden;min-height:700px;">
+      <!-- Calendly inline widget begin -->
+      <div class="calendly-inline-widget" data-url="https://calendly.com/washfiction" style="min-width:320px;height:700px;"></div>
+      <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+      <!-- Calendly inline widget end -->
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" style="background: var(--dark);">
+  <p class="section-eyebrow reveal">Social proof</p>
+  <h2 class="section-title reveal">What PSL says</h2>
+  <p class="section-body reveal">Real customers, real results. Replace these with your Google reviews as they come in.</p>
+  <div class="reviews-grid reveal">
+    <div class="review-card">
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="review-text">&ldquo;My driveway hasn&rsquo;t looked this good since the day we moved in. Showed up on time, sent before and after photos. Will definitely book again.&rdquo;</p>
+      <div class="review-author">Jennifer M. &mdash; Port Saint Lucie</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="review-text">&ldquo;Booked online Saturday night, they were here Sunday morning. Fast, professional, and the house looks incredible. Already signed up for the recurring discount.&rdquo;</p>
+      <div class="review-author">Robert K. &mdash; Stuart</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="review-text">&ldquo;The algae on our pool deck was embarrassing. One visit and it looks brand new. Best money I&rsquo;ve spent on this house.&rdquo;</p>
+      <div class="review-author">Maria T. &mdash; Palm City</div>
+    </div>
+  </div>
+</section>
+
+<!-- AREA -->
+<section id="area">
+  <p class="section-eyebrow reveal">We come to you</p>
+  <h2 class="section-title reveal">Service area</h2>
+  <p class="section-body reveal">Serving the entire Treasure Coast. Weekend and weekday appointments available. Not sure if we cover your area? Just ask.</p>
+  <div class="area-tags reveal">
+    <div class="area-tag">Port Saint Lucie</div>
+    <div class="area-tag">Stuart</div>
+    <div class="area-tag">Palm City</div>
+    <div class="area-tag">Jensen Beach</div>
+    <div class="area-tag">Fort Pierce</div>
+    <div class="area-tag">Tradition</div>
+    <div class="area-tag">Hobe Sound</div>
+    <div class="area-tag">St. Lucie West</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">Wash Fiction LLC</div>
+      <div class="footer-brand-tag">&ldquo;The path of the righteous wash&rdquo;</div>
+    </div>
+    <div class="footer-links-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#services">House washing</a></li>
+        <li><a href="#services">Driveway cleaning</a></li>
+        <li><a href="#services">Pool deck</a></li>
+        <li><a href="#services">Soft washing</a></li>
+      </ul>
+    </div>
+    <div class="footer-links-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#book">Book online</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#area">Service area</a></li>
+      </ul>
+    </div>
+    <div class="footer-links-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://instagram.com/washfiction" target="_blank">Instagram</a></li>
+        <li><a href="https://facebook.com/washfiction" target="_blank">Facebook</a></li>
+        <li><a href="https://nextdoor.com" target="_blank">Nextdoor</a></li>
+        <li><a href="mailto:chris@washfiction.com">Email us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-legal">
+      &copy; 2026 Wash Fiction LLC &middot; Port Saint Lucie, FL &middot; Licensed &amp; Insured
+    </div>
+    <div class="footer-phone">(772) 000-0000</div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('navLinks').classList.remove('open');
+    });
+  });
+</script>
+</body>
+</html>
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: .08em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black) !important;
+    font-weight: 500 !important;
+    padding: 9px 20px;
+    border-radius: 4px;
+    font-size: 12px !important;
+    letter-spacing: .08em !important;
+  }
+
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--black) !important; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--gold);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 5% 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,179,112,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-location {
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp .6s .1s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 16vw, 160px);
+    line-height: .92;
+    letter-spacing: .04em;
+    color: var(--white);
+    margin-bottom: 0;
+    opacity: 0;
+    animation: fadeUp .6s .2s forwards;
+  }
+
+  .hero-title .gold { color: var(--gold); }
+
+  .hero-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(16px, 3vw, 22px);
+    color: var(--muted);
+    margin: 16px 0 40px;
+    letter-spacing: .02em;
+    opacity: 0;
+    animation: fadeUp .6s .35s forwards;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp .6s .45s forwards;
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .2s, transform .15s;
+  }
+
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 4px;
+    border: 0.5px solid var(--gold);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all .2s;
+  }
+
+  .btn-outline:hover { background: rgba(201,179,112,.08); transform: translateY(-1px); }
+
+  /* TRUST BAR */
+  .trust-bar {
+    background: var(--dark);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 16px 5%;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: .06em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .trust-item::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 80px 5%;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 56px);
+    letter-spacing: .06em;
+    color: var(--white);
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+
+  .section-body {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.8;
+    margin-bottom: 40px;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+  }
+
+  .svc-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 16px;
+    transition: border-color .2s, transform .2s;
+  }
+
+  .svc-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .svc-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: .06em;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .svc-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .svc-price {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .price-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    transition: border-color .2s;
+  }
+
+  .price-card:hover { border-color: var(--dim); }
+
+  .price-card.featured {
+    border: 1.5px solid var(--gold);
+  }
+
+  .price-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--black);
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-bottom: 14px;
+  }
+
+  .price-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: .06em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .price-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: .02em;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .price-amount span {
+    font-size: 20px;
+    color: var(--muted);
+  }
+
+  .price-list {
+    list-style: none;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  .price-list li::before {
+    content: '— ';
+    color: var(--gold);
+  }
+
+  /* BOOKING */
+  #book {
+    background: var(--dark);
+  }
+
+  .recurring-strip {
+    background: rgba(201,179,112,.06);
+    border: 0.5px solid rgba(201,179,112,.3);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .recurring-strip-text {
+    font-size: 14px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .recurring-strip-sub {
+    font-size: 12px;
+    color: var(--gold-dark);
+    margin-top: 2px;
+  }
+
+  .recurring-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: .08em;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .booking-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--white);
+    transition: border-color .2s;
+    appearance: none;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  .form-select option { background: var(--card); }
+
+  .form-textarea { resize: vertical; min-height: 80px; }
+
+  /* Calendly embed */
+  .calendly-wrap {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  .calendly-placeholder-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: .08em;
+    color: var(--gold);
+  }
+
+  .calendly-placeholder-body {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 280px;
+    line-height: 1.7;
+  }
+
+  .calendly-setup-steps {
+    text-align: left;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 2;
+    max-width: 300px;
+  }
+
+  .calendly-setup-steps li { list-style: none; }
+  .calendly-setup-steps li::before { content: '→ '; color: var(--gold); }
+
+  /* REVIEWS */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  .review-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 22px;
+    transition: border-color .2s;
+  }
+
+  .review-card:hover { border-color: var(--dim); }
+
+  .review-stars {
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .review-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #999;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .review-author {
+    font-size: 11px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--dim);
+    font-weight: 500;
+  }
+
+  /* AREA */
+  .area-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .area-tag {
+    font-size: 12px;
+    letter-spacing: .06em;
+    color: var(--muted);
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    border-top: 0.5px solid var(--border);
+    padding: 48px 5% 32px;
+  }
+
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .footer-brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: .1em;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .footer-brand-tag {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .footer-links-col h4 {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .footer-links-col ul { list-style: none; }
+
+  .footer-links-col li {
+    margin-bottom: 8px;
+  }
+
+  .footer-links-col a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .2s;
+  }
+
+  .footer-links-col a:hover { color: var(--white); }
+
+  .footer-bottom {
+    border-top: 0.5px solid var(--border);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-legal {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: .04em;
+  }
+
+  .footer-phone {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: .1em;
+    color: var(--gold);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s, transform .6s;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--dark);
+      border-bottom: 0.5px solid var(--border);
+      padding: 20px 5%;
+      gap: 16px;
+    }
+    .booking-wrap { grid-template-columns: 1fr; }
+    .trust-bar { gap: 16px; justify-content: flex-start; }
+    .footer-top { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-name">Wash Fiction</div>
+    <div class="nav-tagline">The path of the righteous wash</div>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#book">Book</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#book" class="nav-cta">Book Now</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-location">Port Saint Lucie &middot; Stuart &middot; Palm City &middot; Treasure Coast</p>
+  <h1 class="hero-title">WASH<br><span class="gold">FICTION</span><br>LLC</h1>
+  <p class="hero-subtitle">&ldquo;Where dirt becomes fiction&rdquo;</p>
+  <div class="hero-btns">
+    <a href="#book" class="btn-gold">Book a job online</a>
+    <a href="#pricing" class="btn-outline">View pricing</a>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item">Licensed &amp; insured</div>
+  <div class="trust-item">Same-week availability</div>
+  <div class="trust-item">Before &amp; after photos every job</div>
+  <div class="trust-item">10% recurring customer discount</div>
+  <div class="trust-item">Serving the Treasure Coast</div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <p class="section-eyebrow reveal">What we do</p>
+  <h2 class="section-title reveal">Services</h2>
+  <p class="section-body reveal">Professional pressure washing and soft washing for homes and businesses across the Treasure Coast. Every job includes a before-and-after photo sent directly to your phone.</p>
+  <div class="services-grid reveal">
+    <div class="svc-card">
+      <div class="svc-name">House Wash</div>
+      <div class="svc-desc">Soft wash method. Safe on stucco, vinyl, Hardie board. Kills mold and algae at the root.</div>
+      <div class="svc-price">From $275</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-name">Driveway</div>
+      <div class="svc-desc">Surface cleaner for streak-free results. Edge detail included on every job.</div>
+      <div class="svc-price">From $150</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-name">Pool Deck</div>
+      <div class="svc-desc">Concrete, cool deck, pavers, and travertine. Low pressure to protect coatings.</div>
+      <div class="svc-price">From $150</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-name">Patio &amp; Lanai</div>
+      <div class="svc-desc">Screened or open. Removes algae, mildew, and Florida's trademark green buildup.</div>
+      <div class="svc-price">From $100</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-name">Fence</div>
+      <div class="svc-desc">Vinyl, wood, aluminum. White 40&deg; nozzle to protect surfaces and paint.</div>
+      <div class="svc-price">From $100</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-name">Soft Wash</div>
+      <div class="svc-desc">Low-pressure chemical cleaning for roofs, stucco, and delicate surfaces.</div>
+      <div class="svc-price">From $275</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background: var(--dark);">
+  <p class="section-eyebrow reveal">Transparent pricing</p>
+  <h2 class="section-title reveal">No surprises</h2>
+  <p class="section-body reveal">Flat-rate combos for the most popular jobs. Free estimates for anything custom. Recurring customers save 10% on every return visit.</p>
+  <div class="pricing-grid reveal">
+    <div class="price-card">
+      <div class="price-name">Driveway</div>
+      <div class="price-amount">$150<span>+</span></div>
+      <ul class="price-list">
+        <li>Surface cleaner clean</li>
+        <li>Edge &amp; perimeter detail</li>
+        <li>Before &amp; after photo</li>
+      </ul>
+    </div>
+    <div class="price-card featured">
+      <div class="price-badge">Most popular</div>
+      <div class="price-name">House + Driveway</div>
+      <div class="price-amount">$425</div>
+      <ul class="price-list">
+        <li>Full exterior soft wash</li>
+        <li>Driveway surface clean</li>
+        <li>Mold &amp; algae treatment</li>
+        <li>Before &amp; after photos</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Full Property</div>
+      <div class="price-amount">$525</div>
+      <ul class="price-list">
+        <li>House + driveway</li>
+        <li>Patio or pool deck</li>
+        <li>Walkways included</li>
+        <li>Before &amp; after photos</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Pool Deck</div>
+      <div class="price-amount">$175<span>+</span></div>
+      <ul class="price-list">
+        <li>Concrete, pavers, travertine</li>
+        <li>Cool deck safe</li>
+        <li>Before &amp; after photo</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="book">
+  <p class="section-eyebrow reveal">Skip the phone call</p>
+  <h2 class="section-title reveal">Book Online</h2>
+  <p class="section-body reveal">Pick your service, pick your day, confirm instantly. Available most weekends — sometimes weekdays too.</p>
+
+  <div class="recurring-strip reveal">
+    <div>
+      <div class="recurring-strip-text">Recurring customer discount</div>
+      <div class="recurring-strip-sub">Book your next visit within 6 months and save 10% every time — automatically applied</div>
+    </div>
+    <div class="recurring-badge">SAVE 10%</div>
+  </div>
+
+  <div class="booking-wrap">
+    <div class="reveal">
+      <div class="form-group">
+        <label class="form-label">Service</label>
+        <select class="form-select" id="serviceSelect">
+          <option value="">Select a service...</option>
+          <option>House wash — from $275</option>
+          <option>Driveway — from $150</option>
+          <option>House + driveway combo — $425</option>
+          <option>Full property — $525</option>
+          <option>Pool deck — from $150</option>
+          <option>Patio / lanai — from $100</option>
+          <option>Fence — from $100</option>
+          <option>Soft wash — from $275</option>
+          <option>Custom / not sure — get a quote</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your address</label>
+        <input class="form-input" type="text" placeholder="Street address, PSL / Stuart / Palm City">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your name</label>
+        <input class="form-input" type="text" placeholder="First and last name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone number</label>
+        <input class="form-input" type="tel" placeholder="(772) 000-0000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Anything we should know?</label>
+        <textarea class="form-textarea" placeholder="e.g. gate code, dog in backyard, specific area of concern..."></textarea>
+      </div>
+    </div>
+
     <div class="reveal" style="background:var(--card);border:0.5px solid var(--border);border-radius:8px;overflow:hidden;min-height:500px;">
       <!-- Cal inline embed code begins -->
       <div style="width:100%;height:100%;min-height:500px;overflow:scroll" id="my-cal-inline-pressure-washing-booking"></div>
