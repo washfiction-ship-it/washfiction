@@ -286,11 +286,11 @@
   /* SERVICES */
   .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-    justify-items: center;
     max-width: 1000px;
     margin: 0 auto;
+    width: 100%;
   }
 
   .svc-card {
@@ -299,6 +299,7 @@
     border-radius: 8px;
     padding: 20px 16px;
     transition: border-color .2s, transform .2s;
+    width: 100%;
   }
 
   .svc-card:hover {
@@ -655,6 +656,7 @@
     .booking-wrap { grid-template-columns: 1fr; }
     .trust-bar { gap: 16px; justify-content: flex-start; }
     .footer-top { flex-direction: column; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -663,7 +665,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-brand">
-    <img src="logo.svg" alt="Wash Fiction LLC" style="height:44px;width:auto;display:block;">
+    <img src="logo.png" alt="Wash Fiction LLC" style="height:44px;width:auto;display:block;">
   </div>
   <ul class="nav-links" id="navLinks">
     <li><a href="#services">Services</a></li>
@@ -679,7 +681,7 @@
 <!-- HERO -->
 <div class="hero">
   <p class="hero-location">Port Saint Lucie &middot; Stuart &middot; Palm City &middot; Treasure Coast</p>
-  <img src="logo.svg" alt="Wash Fiction LLC" style="width:min(600px,90%);height:auto;margin-bottom:16px;opacity:0;animation:fadeUp .6s .15s forwards;">
+  <img src="logo.png" alt="Wash Fiction LLC" style="width:min(600px,90%);height:auto;margin-bottom:16px;opacity:0;animation:fadeUp .6s .15s forwards;">
 
   <div class="hero-btns">
     <a href="#book" class="btn-gold">Book a job online</a>
@@ -705,29 +707,43 @@
     <div class="svc-card">
       <div class="svc-name">House Wash</div>
       <div class="svc-desc">Soft wash method. Safe on stucco, vinyl, Hardie board. Kills mold and algae at the root.</div>
-      <div class="svc-price">From $275</div>
+      <div class="svc-price">$0.30/sqft</div>
     </div>
     <div class="svc-card">
-      <div class="svc-name">Driveway</div>
-      <div class="svc-desc">Surface cleaner for streak-free results. Edge detail included on every job.</div>
-      <div class="svc-price">From $150</div>
+      <div class="svc-name">Concrete Cleaning</div>
+      <div class="svc-desc">Surface cleaner for streak-free results on driveways, walkways, and pads. Edge detail included.</div>
+      <div class="svc-price">$0.25/sqft</div>
     </div>
     <div class="svc-card">
-      <div class="svc-name">Pool Deck</div>
-      <div class="svc-desc">Concrete, cool deck, pavers, and travertine. Low pressure to protect coatings.</div>
-      <div class="svc-price">From $150</div>
+      <div class="svc-name">Gutter Clean Out</div>
+      <div class="svc-desc">Flush gutters and downspouts completely clear of debris, leaves, and buildup.</div>
+      <div class="svc-price">$1.50/linear ft</div>
     </div>
     <div class="svc-card">
-      <div class="svc-name">Patio &amp; Lanai</div>
-      <div class="svc-desc">Screened or open. Removes algae, mildew, and Florida's trademark green buildup.</div>
-      <div class="svc-price">From $100</div>
+      <div class="svc-name">Gutter Whitening</div>
+      <div class="svc-desc">Professional chemical treatment removes black oxidation streaks from gutter faces.</div>
+      <div class="svc-price">$2.00/linear ft</div>
     </div>
     <div class="svc-card">
-      <div class="svc-name">Fence</div>
-      <div class="svc-desc">Vinyl, wood, aluminum. White 40&deg; nozzle to protect surfaces and paint.</div>
-      <div class="svc-price">From $100</div>
+      <div class="svc-name">Deck Cleaning</div>
+      <div class="svc-desc">Wood, composite, or concrete decks. Removes algae, mildew, and built-up grime safely.</div>
+      <div class="svc-price">$0.25/sqft</div>
     </div>
-
+    <div class="svc-card">
+      <div class="svc-name">Paver Cleaning</div>
+      <div class="svc-desc">Correct pressure and technique to restore color without disturbing sand joints.</div>
+      <div class="svc-price">$0.30/sqft</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-name">Fence Cleaning</div>
+      <div class="svc-desc">Vinyl, wood, and aluminum. Correct method for your material — no damage, no missed spots.</div>
+      <div class="svc-price">$1.00/linear ft</div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-name">House Wash &amp; Concrete Combo</div>
+      <div class="svc-desc">Full exterior soft wash plus concrete cleaning in one visit. Best value — save versus booking separately.</div>
+      <div class="svc-price">$0.22/sqft</div>
+    </div>
   </div>
 </section>
 
@@ -735,45 +751,87 @@
 <section id="pricing" style="background: var(--dark);text-align:center;">
   <p class="section-eyebrow reveal">Transparent pricing</p>
   <h2 class="section-title reveal">No surprises</h2>
-  <p class="section-body reveal" style="margin:0 auto 40px;">Flat-rate combos for the most popular jobs. Free estimates for anything custom. Recurring customers save 10% on every return visit.</p>
+  <p class="section-body reveal" style="margin:0 auto 40px;">All services priced by square footage or linear foot. Free estimates on any job. Recurring customers save 10% on every return visit.</p>
   <div class="pricing-grid reveal">
     <div class="price-card">
-      <div class="price-name">Driveway</div>
-      <div class="price-amount">$150<span>+</span></div>
+      <div class="price-name">House Wash</div>
+      <div class="price-amount">$0.30<span>/sqft</span></div>
       <ul class="price-list">
-        <li>Surface cleaner clean</li>
+        <li>Full exterior soft wash</li>
+        <li>Mold &amp; algae treatment</li>
+        <li>Minimum $300</li>
+        <li>Before &amp; after photos</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Concrete Cleaning</div>
+      <div class="price-amount">$0.25<span>/sqft</span></div>
+      <ul class="price-list">
+        <li>Driveways, walkways, pads</li>
         <li>Edge &amp; perimeter detail</li>
-        <li>Before &amp; after photo</li>
+        <li>Minimum $150</li>
+        <li>Before &amp; after photos</li>
       </ul>
     </div>
     <div class="price-card featured">
-      <div class="price-badge">Most popular</div>
-      <div class="price-name">House + Driveway</div>
-      <div class="price-amount">$425</div>
+      <div class="price-badge">Best value</div>
+      <div class="price-name">House Wash &amp; Concrete Combo</div>
+      <div class="price-amount">$0.22<span>/sqft</span></div>
       <ul class="price-list">
+        <li>House + concrete at flat $0.22/sqft</li>
         <li>Full exterior soft wash</li>
         <li>Driveway surface clean</li>
-        <li>Mold &amp; algae treatment</li>
         <li>Before &amp; after photos</li>
       </ul>
     </div>
     <div class="price-card">
-      <div class="price-name">Full Property</div>
-      <div class="price-amount">$525</div>
+      <div class="price-name">Paver Cleaning</div>
+      <div class="price-amount">$0.30<span>/sqft</span></div>
       <ul class="price-list">
-        <li>House + driveway</li>
-        <li>Patio or pool deck</li>
-        <li>Walkways included</li>
+        <li>Driveways, patios, walkways</li>
+        <li>Sand joint safe method</li>
+        <li>Minimum $150</li>
         <li>Before &amp; after photos</li>
       </ul>
     </div>
     <div class="price-card">
-      <div class="price-name">Pool Deck</div>
-      <div class="price-amount">$175<span>+</span></div>
+      <div class="price-name">Deck Cleaning</div>
+      <div class="price-amount">$0.25<span>/sqft</span></div>
       <ul class="price-list">
-        <li>Concrete, pavers, travertine</li>
-        <li>Cool deck safe</li>
-        <li>Before &amp; after photo</li>
+        <li>Wood, composite, concrete</li>
+        <li>Algae &amp; mildew removal</li>
+        <li>Minimum $150</li>
+        <li>Before &amp; after photos</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Fence Cleaning</div>
+      <div class="price-amount">$1.00<span>/lin ft</span></div>
+      <ul class="price-list">
+        <li>Vinyl, wood, aluminum</li>
+        <li>Surface-safe method</li>
+        <li>Minimum $100</li>
+        <li>Before &amp; after photos</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Gutter Clean Out</div>
+      <div class="price-amount">$1.50<span>/lin ft</span></div>
+      <ul class="price-list">
+        <li>Gutters &amp; downspouts flushed</li>
+        <li>Debris fully cleared</li>
+        <li>Minimum $75</li>
+        <li>Before &amp; after photos</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Gutter Whitening</div>
+      <div class="price-amount">$2.00<span>/lin ft</span></div>
+      <ul class="price-list">
+        <li>Black streak removal</li>
+        <li>Chemical oxidation treatment</li>
+        <li>Minimum $100</li>
+        <li>Before &amp; after photos</li>
       </ul>
     </div>
   </div>
@@ -831,9 +889,10 @@
       <h4>Services</h4>
       <ul>
         <li><a href="#services">House washing</a></li>
-        <li><a href="#services">Driveway cleaning</a></li>
-        <li><a href="#services">Pool deck</a></li>
-        <li><a href="#services">Soft washing</a></li>
+        <li><a href="#services">Concrete cleaning</a></li>
+        <li><a href="#services">Paver cleaning</a></li>
+        <li><a href="#services">Gutter services</a></li>
+        <li><a href="#services">Deck &amp; fence cleaning</a></li>
       </ul>
     </div>
     <div class="footer-links-col">
@@ -850,7 +909,7 @@
         <li><a href="https://instagram.com/washfiction" target="_blank">Instagram</a></li>
         <li><a href="https://facebook.com/washfiction" target="_blank">Facebook</a></li>
         <li><a href="https://nextdoor.com" target="_blank">Nextdoor</a></li>
-        <li><a href="mailto:washfiction@gmail.com">Email us</a></li>
+        <li><a href="mailto:chris@washfiction.com">Email us</a></li>
       </ul>
     </div>
   </div>
@@ -858,7 +917,7 @@
     <div class="footer-legal">
       &copy; 2026 Wash Fiction LLC &middot; Port Saint Lucie, FL &middot; Licensed &amp; Insured
     </div>
-    <div class="footer-phone">(914-279-9351)</div>
+    <div class="footer-phone">(772) 000-0000</div>
   </div>
 </footer>
 
