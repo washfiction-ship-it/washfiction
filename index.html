@@ -637,6 +637,42 @@
     transform: translateY(0);
   }
 
+  /* BEFORE / AFTER PAIR */
+  .ba-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .ba-pair-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    aspect-ratio: 1 / 1;
+  }
+  .ba-pair-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .ba-pair-label {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: rgba(8,8,8,0.75);
+    padding: 5px 12px;
+    border-radius: 3px;
+  }
+  .ba-pair-label-after {
+    background: var(--gold);
+    color: #080808;
+  }
+
   /* MOBILE */
   @media (max-width: 768px) {
     .nav-links { display: none; }
@@ -670,6 +706,7 @@
   <ul class="nav-links" id="navLinks">
     <li><a href="#services">Services</a></li>
     <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#results">Results</a></li>
     <li><a href="#book">Book</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li><a href="#book" class="nav-cta">Book Now</a></li>
@@ -835,6 +872,61 @@
         <li>Before &amp; after photos</li>
       </ul>
     </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section id="results" style="text-align:center;">
+  <p class="section-eyebrow reveal">See the difference</p>
+  <h2 class="section-title reveal">Before &amp; After</h2>
+  <p class="section-body reveal" style="margin:0 auto 40px;">Real results from real Treasure Coast jobs.</p>
+
+  <div class="reveal" style="max-width:800px;margin:0 auto;">
+
+    <div class="ba-pair" style="margin-bottom:28px;">
+      <div class="ba-pair-item">
+        <img src="job1-before.jpg" alt="dirty driveway before pressure washing Port Saint Lucie FL" class="ba-pair-img">
+        <div class="ba-pair-label">Before</div>
+      </div>
+      <div class="ba-pair-item">
+        <img src="job1-after.jpg" alt="clean driveway after pressure washing Port Saint Lucie FL" class="ba-pair-img">
+        <div class="ba-pair-label ba-pair-label-after">After</div>
+      </div>
+    </div>
+
+    <div class="ba-pair" style="margin-bottom:28px;">
+      <div class="ba-pair-item">
+        <img src="job2-before.jpg" alt="before pressure washing Port Saint Lucie FL" class="ba-pair-img">
+        <div class="ba-pair-label">Before</div>
+      </div>
+      <div class="ba-pair-item">
+        <img src="job2-after.jpg" alt="after pressure washing Port Saint Lucie FL" class="ba-pair-img">
+        <div class="ba-pair-label ba-pair-label-after">After</div>
+      </div>
+    </div>
+
+    <div class="ba-pair" style="margin-bottom:28px;">
+      <div class="ba-pair-item">
+        <img src="job3-before.jpg" alt="before pressure washing Treasure Coast FL" class="ba-pair-img">
+        <div class="ba-pair-label">Before</div>
+      </div>
+      <div class="ba-pair-item">
+        <img src="job3-after.jpg" alt="after pressure washing Treasure Coast FL" class="ba-pair-img">
+        <div class="ba-pair-label ba-pair-label-after">After</div>
+      </div>
+    </div>
+
+    <div class="ba-pair">
+      <div class="ba-pair-item">
+        <img src="job4-before.jpg" alt="before soft wash Port Saint Lucie FL" class="ba-pair-img">
+        <div class="ba-pair-label">Before</div>
+      </div>
+      <div class="ba-pair-item">
+        <img src="job4-after.jpg" alt="after soft wash Port Saint Lucie FL" class="ba-pair-img">
+        <div class="ba-pair-label ba-pair-label-after">After</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
