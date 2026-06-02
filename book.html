@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Book your pressure washing service online with Wash Fiction LLC. Serving Port Saint Lucie, Stuart, Palm City and the Treasure Coast. Pick your service, pick your time, confirm instantly.">
+<meta name="keywords" content="pressure washing Port Saint Lucie, soft wash PSL, driveway cleaning Stuart, house washing Palm City, gutter cleaning Treasure Coast, paver cleaning Port Saint Lucie, fence washing PSL, exterior cleaning Port Saint Lucie FL, pool deck cleaning PSL">
+<meta property="og:title" content="Pressure Washing Port Saint Lucie FL | Wash Fiction LLC">
+<meta property="og:description" content="Professional pressure washing serving Port Saint Lucie, Stuart, Palm City and the Treasure Coast. Licensed, insured, book online 24/7.">
+<meta property="og:url" content="https://washfiction.com/book">
+<title>Book Online | Wash Fiction LLC Pressure Washing Port Saint Lucie</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --dark: #111111;
+    --card: #161616;
+    --border: #252525;
+    --gold: #c9b370;
+    --gold-dark: #a8903a;
+    --gold-light: #e8d49a;
+    --white: #f4f0e8;
+    --muted: #666;
+    --dim: #333;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,8,8,0.96);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-brand {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: .12em;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .nav-tagline {
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: .08em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black) !important;
+    font-weight: 500 !important;
+    padding: 9px 20px;
+    border-radius: 4px;
+    font-size: 12px !important;
+    letter-spacing: .08em !important;
+  }
+
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--black) !important; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--gold);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 5% 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,179,112,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-location {
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp .6s .1s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 16vw, 160px);
+    line-height: .92;
+    letter-spacing: .04em;
+    color: var(--white);
+    margin-bottom: 0;
+    opacity: 0;
+    animation: fadeUp .6s .2s forwards;
+  }
+
+  .hero-title .gold { color: var(--gold); }
+
+  .hero-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(16px, 3vw, 22px);
+    color: var(--muted);
+    margin: 16px 0 40px;
+    letter-spacing: .02em;
+    opacity: 0;
+    animation: fadeUp .6s .35s forwards;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp .6s .45s forwards;
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .2s, transform .15s;
+  }
+
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 4px;
+    border: 0.5px solid var(--gold);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all .2s;
+  }
+
+  .btn-outline:hover { background: rgba(201,179,112,.08); transform: translateY(-1px); }
+
+  /* TRUST BAR */
+  .trust-bar {
+    background: var(--dark);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 16px 5%;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: .06em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .trust-item::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 80px 5%;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 56px);
+    letter-spacing: .06em;
+    color: var(--white);
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+
+  .section-body {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.8;
+    margin-bottom: 40px;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .svc-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 16px;
+    transition: border-color .2s, transform .2s;
+    width: 100%;
+  }
+
+  .svc-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .svc-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: .06em;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .svc-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .svc-price {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    justify-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .price-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    transition: border-color .2s;
+  }
+
+  .price-card:hover { border-color: var(--dim); }
+
+  .price-card.featured {
+    border: 1.5px solid var(--gold);
+  }
+
+  .price-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--black);
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-bottom: 14px;
+  }
+
+  .price-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: .06em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .price-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: .02em;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .price-amount span {
+    font-size: 20px;
+    color: var(--muted);
+  }
+
+  .price-list {
+    list-style: none;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  .price-list li::before {
+    content: '— ';
+    color: var(--gold);
+  }
+
+  /* BOOKING */
+  #book {
+    background: var(--dark);
+  }
+
+  .recurring-strip {
+    background: rgba(201,179,112,.06);
+    border: 0.5px solid rgba(201,179,112,.3);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 0 auto 32px;
+    flex-wrap: wrap;
+    text-align: center;
+    max-width: 700px;
+  }
+
+  .recurring-strip-text {
+    font-size: 14px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .recurring-strip-sub {
+    font-size: 12px;
+    color: var(--gold-dark);
+    margin-top: 2px;
+  }
+
+  .recurring-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: .08em;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* Calendly embed */
+  .calendly-wrap {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  .calendly-placeholder-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: .08em;
+    color: var(--gold);
+  }
+
+  .calendly-placeholder-body {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 280px;
+    line-height: 1.7;
+  }
+
+  .calendly-setup-steps {
+    text-align: left;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 2;
+    max-width: 300px;
+  }
+
+  .calendly-setup-steps li { list-style: none; }
+  .calendly-setup-steps li::before { content: '→ '; color: var(--gold); }
+
+  /* REVIEWS */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  .review-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 22px;
+    transition: border-color .2s;
+  }
+
+  .review-card:hover { border-color: var(--dim); }
+
+  .review-stars {
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .review-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #999;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .review-author {
+    font-size: 11px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--dim);
+    font-weight: 500;
+  }
+
+  /* AREA */
+  .area-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    justify-content: center;
+  }
+
+  .area-tag {
+    font-size: 12px;
+    letter-spacing: .06em;
+    color: var(--muted);
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    border-top: 0.5px solid var(--border);
+    padding: 48px 5% 32px;
+  }
+
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .footer-brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: .1em;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .footer-brand-tag {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .footer-links-col h4 {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .footer-links-col ul { list-style: none; }
+
+  .footer-links-col li {
+    margin-bottom: 8px;
+  }
+
+  .footer-links-col a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .2s;
+  }
+
+  .footer-links-col a:hover { color: var(--white); }
+
+  .footer-bottom {
+    border-top: 0.5px solid var(--border);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-legal {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: .04em;
+  }
+
+  .footer-phone {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: .1em;
+    color: var(--gold);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s, transform .6s;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* BEFORE / AFTER PAIR */
+  .ba-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .ba-pair-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    aspect-ratio: 1 / 1;
+  }
+  .ba-pair-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .ba-pair-label {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: rgba(8,8,8,0.75);
+    padding: 5px 12px;
+    border-radius: 3px;
+  }
+  .ba-pair-label-after {
+    background: var(--gold);
+    color: #080808;
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--dark);
+      border-bottom: 0.5px solid var(--border);
+      padding: 20px 5%;
+      gap: 16px;
+    }
+    .booking-wrap { grid-template-columns: 1fr; }
+    .trust-bar { gap: 16px; justify-content: flex-start; }
+    .footer-top { flex-direction: column; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <a href="index.html"><img src="logo.svg" alt="Wash Fiction LLC" style="height:44px;width:auto;display:block;"></a>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#pricing">Pricing</a></li>
+    <li><a href="index.html#results">Results</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="index.html">Home</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- BOOKING -->
+<section id="book" style="text-align:center;padding-top:60px;">
+  <h2 class="section-title reveal">Book Online</h2>
+  <p class="section-body reveal" style="margin:0 auto 40px;">Pick your service, pick your day, confirm instantly. Available most weekends &mdash; sometimes weekdays too.</p>
+
+  <div class="recurring-strip reveal">
+    <div>
+      <div class="recurring-strip-text">Recurring customer discount</div>
+      <div class="recurring-strip-sub">Book your next visit within 6 months and save 10% every time &mdash; automatically applied</div>
+    </div>
+    <div class="recurring-badge">SAVE 10%</div>
+  </div>
+
+  <div class="reveal" style="background:var(--card);border:0.5px solid var(--border);border-radius:8px;overflow:hidden;min-height:700px;">
+    <!-- Calendly inline widget begin -->
+    <div class="calendly-inline-widget" data-url="https://calendly.com/washfiction" style="min-width:320px;height:700px;"></div>
+    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    <!-- Calendly inline widget end -->
+  </div>
+</section>
+
+<!-- CALL TO BOOK -->
+<section id="call" style="text-align:center;">
+  <p class="section-eyebrow reveal">Prefer to talk?</p>
+  <h2 class="section-title reveal">Give us a call</h2>
+  <p class="section-body reveal" style="margin:0 auto 32px;">Rather book over the phone or have questions first? Call or text and we'll take care of you.</p>
+  <a href="tel:+19142799351" class="btn-gold reveal" style="font-size:18px;padding:16px 40px;">Call or text (914) 279-9351</a>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">Wash Fiction LLC</div>
+      <div class="footer-brand-tag">&ldquo;Where dirt becomes fiction&rdquo;</div>
+    </div>
+    <div class="footer-links-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="index.html#services">House washing</a></li>
+        <li><a href="index.html#services">Concrete cleaning</a></li>
+        <li><a href="index.html#services">Paver cleaning</a></li>
+        <li><a href="index.html#services">Roof wash</a></li>
+        <li><a href="index.html#services">Deck &amp; fence cleaning</a></li>
+      </ul>
+    </div>
+    <div class="footer-links-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="index.html#pricing">Pricing</a></li>
+        <li><a href="book.html">Book online</a></li>
+        <li><a href="index.html#area">Service area</a></li>
+      </ul>
+    </div>
+    <div class="footer-links-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://instagram.com/washfiction" target="_blank">Instagram</a></li>
+        <li><a href="https://facebook.com/washfiction" target="_blank">Facebook</a></li>
+        <li><a href="https://nextdoor.com" target="_blank">Nextdoor</a></li>
+        <li><a href="mailto:washfiction@gmail.com">Email us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-legal">
+      &copy; 2026 Wash Fiction LLC &middot; Port Saint Lucie, FL &middot; Licensed &amp; Insured
+    </div>
+    <div class="footer-phone">(914) 279-9351</div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
