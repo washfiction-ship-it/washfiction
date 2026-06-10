@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Royale with Grime — Pressure Washing Simulator</title>
+<style>
+  :root{
+    --concrete:#d8d5cd;
+    --concrete-dk:#c2bfb6;
+    --ink:#23272e;
+    --ink-soft:#4a5160;
+    --safety:#ff5a1f;
+    --safety-dk:#d9440e;
+    --sh-cyan:#0e9aab;
+    --sh-cyan-dk:#0a7c8a;
+    --panel:#f4f2ec;
+    --line:#a9a59a;
+    --good:#2e8b57;
+    --bad:#c0392b;
+    --phone:#171a20;
+    --phone-edge:#2b303b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background:var(--concrete);
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(0,0,0,.04) 0 2px, transparent 3px),
+      radial-gradient(circle at 70% 60%, rgba(0,0,0,.05) 0 1px, transparent 2px),
+      radial-gradient(circle at 40% 80%, rgba(255,255,255,.25) 0 1px, transparent 2px);
+    background-size: 90px 90px, 60px 60px, 75px 75px;
+    color:var(--ink);
+    -webkit-tap-highlight-color:transparent;
+  }
+  #app{max-width:980px; margin:0 auto; padding:10px 12px 60px;}
+
+  /* ---------- header ---------- */
+  #titleWrap{position:relative; margin:4px 0 2px;}
+  #titleCanvas{width:100%; height:auto; display:block;}
+  .tagline{
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-soft); margin:-2px 0 10px 2px; font-weight:600;
+  }
+  #hud{
+    display:flex; flex-wrap:wrap; gap:8px; align-items:stretch;
+    background:var(--ink); color:#eee; border-radius:10px; padding:10px 12px;
+    box-shadow:0 3px 0 rgba(0,0,0,.25);
+  }
+  .stat{flex:1 1 90px; min-width:86px;}
+  .stat .lbl{font-size:10px; text-transform:uppercase; letter-spacing:.14em; color:#9aa3b2;}
+  .stat .val{font-size:19px; font-weight:800; font-variant-numeric:tabular-nums;}
+  .stat .val.cash{color:#7ee2a8;}
+  .stat .val.cash.broke{color:#ff8a7a;}
+  .stat .val.sh{color:#6fd9e8;}
+  .stat .sub{font-size:10px; color:#8b93a3;}
+
+  /* ---------- tabs ---------- */
+  #tabs{display:flex; gap:6px; margin:12px 0;}
+  .tab{
+    flex:1; padding:11px 6px; text-align:center; font-weight:800; font-size:14px;
+    text-transform:uppercase; letter-spacing:.08em; cursor:pointer; user-select:none;
+    background:var(--panel); border:2px solid var(--ink); border-radius:8px;
+    box-shadow:0 3px 0 var(--ink); transition:transform .05s;
+  }
+  .tab:active{transform:translateY(2px); box-shadow:0 1px 0 var(--ink);}
+  .tab.on{background:var(--safety); color:#fff;}
+  .tab.disabled{opacity:.4; pointer-events:none;}
+  .tab .badge{
+    display:inline-block; background:#fff; color:var(--safety-dk); border-radius:99px;
+    font-size:11px; padding:0 7px; margin-left:5px; vertical-align:1px;
+  }
+
+  .screen{display:none;}
+  .screen.on{display:block; animation:fadeIn .18s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+
+  /* ---------- shop ---------- */
+  .shop-section{margin:18px 0 8px;}
+  .shop-section h2{
+    font-size:13px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-soft);
+    border-bottom:2px solid var(--line); padding-bottom:5px; margin-bottom:10px;
+  }
+  .cards{display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:10px;}
+  .card{
+    background:var(--panel); border:2px solid var(--ink); border-radius:10px;
+    padding:12px; box-shadow:0 3px 0 var(--ink); display:flex; flex-direction:column; gap:6px;
+    position:relative;
+  }
+  .card.owned{border-color:var(--good); box-shadow:0 3px 0 var(--good);}
+  .card h3{font-size:15px; line-height:1.2;}
+  .specline{font-size:13px; font-weight:800; color:var(--safety-dk);}
+  .card .meta{font-size:12px; color:var(--ink-soft);}
+  .card .blurb{font-size:12px; color:var(--ink-soft); font-style:italic; flex:1;}
+  .buyrow{display:flex; align-items:center; justify-content:space-between; margin-top:4px;}
+  .price{font-weight:900; font-size:16px; font-variant-numeric:tabular-nums;}
+  .btn{
+    font:inherit; font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:.06em;
+    padding:8px 14px; border-radius:7px; border:2px solid var(--ink); cursor:pointer;
+    background:var(--safety); color:#fff; box-shadow:0 2px 0 var(--ink);
+  }
+  .btn:active{transform:translateY(2px); box-shadow:none;}
+  .btn:disabled{background:#bbb; color:#666; cursor:not-allowed; box-shadow:0 2px 0 #888;}
+  .btn.cyan{background:var(--sh-cyan);}
+  .btn.ghost{background:var(--panel); color:var(--ink);}
+  .ownedTag{
+    position:absolute; top:-9px; right:10px; background:var(--good); color:#fff;
+    font-size:10px; font-weight:900; letter-spacing:.1em; padding:2px 8px; border-radius:99px;
+    text-transform:uppercase;
+  }
+  .reqwarn{font-size:11px; color:var(--bad); font-weight:700;}
+
+  /* ---------- phone ---------- */
+  #phoneWrap{display:flex; justify-content:center; padding:6px 0 18px;}
+  #phone{
+    width:min(420px,100%); background:var(--phone); border:3px solid var(--phone-edge);
+    border-radius:28px; padding:14px 12px 18px; color:#e8eaf0;
+    box-shadow:0 10px 30px rgba(0,0,0,.35), inset 0 0 0 2px #000;
+  }
+  #phone .notch{width:120px; height:18px; background:#000; border-radius:0 0 12px 12px; margin:-14px auto 8px;}
+  #phone .statusbar{display:flex; justify-content:space-between; font-size:11px; color:#9aa3b2; padding:0 6px 8px;}
+  #phone h2{font-size:16px; padding:0 6px 8px; display:flex; justify-content:space-between; align-items:center;}
+  #phone h2 .dayBtn{font-size:11px;}
+  .msg{
+    background:#222733; border-radius:14px; padding:10px 12px; margin:8px 4px;
+    border:1px solid #313848;
+  }
+  .msg .from{font-weight:800; font-size:13px; color:#fff;}
+  .msg .jobtype{font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:#6fd9e8; font-weight:800;}
+  .msg .body{font-size:13px; color:#c6cbd6; margin:5px 0; line-height:1.35;}
+  .msg .pay{font-weight:900; color:#7ee2a8; font-size:15px;}
+  .msg .req{font-size:11px; color:#ffb38a; margin-top:2px;}
+  .msg .req.bad{color:#ff8a7a; font-weight:700;}
+  .msg .row{display:flex; justify-content:space-between; align-items:center; margin-top:8px;}
+  .msg.done{opacity:.45;}
+  .emptyPhone{color:#7e8696; text-align:center; font-size:13px; padding:24px 10px;}
+
+  /* ---------- job ---------- */
+  #jobHud{
+    display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px;
+    background:var(--panel); border:2px solid var(--ink); border-radius:10px; padding:8px 10px;
+    box-shadow:0 3px 0 var(--ink);
+  }
+  #jobTitle{font-weight:900; font-size:14px; flex:1 1 160px;}
+  .meter{flex:2 1 180px; display:flex; align-items:center; gap:8px;}
+  .meter .bar{flex:1; height:18px; background:#8d8a80; border-radius:99px; overflow:hidden; border:2px solid var(--ink); position:relative;}
+  .meter .fill{height:100%; width:0%; background:linear-gradient(90deg, var(--sh-cyan), #6fd9e8); transition:width .25s;}
+  .meter .pct{font-weight:900; font-variant-numeric:tabular-nums; width:52px; text-align:right;}
+  #jobTimer{font-weight:800; font-variant-numeric:tabular-nums; color:var(--ink-soft); font-size:13px;}
+  #modeRow{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;}
+  .modeBtn{
+    flex:1 1 100px; padding:9px 6px; font-weight:800; font-size:12px; text-transform:uppercase;
+    letter-spacing:.05em; border:2px solid var(--ink); border-radius:8px; background:var(--panel);
+    cursor:pointer; box-shadow:0 2px 0 var(--ink);
+  }
+  .modeBtn.on{background:var(--ink); color:#fff;}
+  .modeBtn.soft.on{background:var(--sh-cyan); border-color:var(--sh-cyan-dk);}
+  .modeBtn.deg.on{background:#7b4fa6; border-color:#5d3a80; color:#fff;}
+  .modeBtn:disabled{opacity:.4; cursor:not-allowed;}
+  #canvasWrap{
+    position:relative; border:3px solid var(--ink); border-radius:10px; overflow:hidden;
+    box-shadow:0 4px 0 var(--ink); touch-action:none; background:#999;
+  }
+  #canvasWrap canvas{position:absolute; inset:0; width:100%; height:100%; display:block;}
+  #surfC{position:relative !important;}
+  #warnFlash{
+    position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .2s;
+    background:rgba(192,57,43,.25); display:flex; align-items:flex-start; justify-content:center;
+  }
+  #warnFlash span{
+    margin-top:10px; background:var(--bad); color:#fff; font-weight:900; font-size:12px;
+    text-transform:uppercase; letter-spacing:.08em; padding:4px 12px; border-radius:99px;
+  }
+  #jobActions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  #jobActions .btn{flex:1;}
+  #jobNote{font-size:12px; color:var(--ink-soft); margin-top:8px; line-height:1.4;}
+
+  /* ---------- toast & overlay ---------- */
+  #toast{
+    position:fixed; left:50%; bottom:18px; transform:translateX(-50%) translateY(80px);
+    background:var(--ink); color:#fff; padding:10px 18px; border-radius:99px; font-weight:700;
+    font-size:13px; transition:transform .25s; z-index:50; max-width:90vw; text-align:center;
+  }
+  #toast.show{transform:translateX(-50%) translateY(0);}
+  #overlay{
+    position:fixed; inset:0; background:rgba(20,23,28,.85); z-index:60; display:none;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  #overlay.show{display:flex;}
+  #overlayBox{
+    background:var(--panel); border:3px solid var(--ink); border-radius:14px; max-width:460px;
+    padding:26px 24px; text-align:center; box-shadow:0 6px 0 var(--ink);
+  }
+  #overlayBox h2{font-size:22px; margin-bottom:8px;}
+  #overlayBox p{font-size:14px; color:var(--ink-soft); margin-bottom:10px; line-height:1.45;}
+  #overlayBox .big{font-size:30px; font-weight:900; color:var(--good); margin:6px 0 12px;}
+
+  @media (max-width:560px){
+    .stat .val{font-size:16px;}
+    .tab{font-size:12px; padding:9px 4px;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="titleWrap"><canvas id="titleCanvas" width="940" height="120"></canvas></div>
+  <div class="tagline">Treasure Coast Pressure Washing Simulator — GPM cleans. PSI cuts.</div>
+
+  <div id="hud">
+    <div class="stat"><div class="lbl">Cash</div><div class="val cash" id="hCash">$5,000</div><div class="sub" id="hGoal">Goal: $30,000</div></div>
+    <div class="stat"><div class="lbl">Day</div><div class="val" id="hDay">1</div><div class="sub" id="hJobs">0 jobs done</div></div>
+    <div class="stat"><div class="lbl">Reputation</div><div class="val" id="hRep">☆☆☆☆☆</div><div class="sub" id="hRepSub">Unknown outfit</div></div>
+    <div class="stat"><div class="lbl">12.5% SH</div><div class="val sh" id="hSH">0 gal</div><div class="sub">sodium hypochlorite</div></div>
+    <div class="stat"><div class="lbl">Rig</div><div class="val" id="hRig" style="font-size:13px; line-height:1.25; padding-top:3px;">No machine</div></div>
+  </div>
+
+  <div id="tabs">
+    <div class="tab on" id="tabShop">Supply Depot</div>
+    <div class="tab" id="tabPhone">Phone <span class="badge" id="phoneBadge" style="display:none">0</span></div>
+    <div class="tab disabled" id="tabJob">On the Job</div>
+  </div>
+
+  <!-- ================= SHOP ================= -->
+  <div class="screen on" id="scrShop">
+    <div class="shop-section">
+      <h2>Pressure Washers</h2>
+      <div class="cards" id="washerCards"></div>
+    </div>
+    <div class="shop-section">
+      <h2>Surface Cleaners</h2>
+      <div class="cards" id="scCards"></div>
+    </div>
+    <div class="shop-section">
+      <h2>Soft Wash &amp; Chemicals</h2>
+      <div class="cards" id="chemCards"></div>
+    </div>
+  </div>
+
+  <!-- ================= PHONE ================= -->
+  <div class="screen" id="scrPhone">
+    <div id="phoneWrap">
+      <div id="phone">
+        <div class="notch"></div>
+        <div class="statusbar"><span id="phClock">8:02 AM</span><span>PSL · 5G · 𝟪𝟩%</span></div>
+        <h2>Messages <button class="btn cyan dayBtn" id="btnNextDay">Next day ▸</button></h2>
+        <div id="jobList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JOB ================= -->
+  <div class="screen" id="scrJob">
+    <div id="jobHud">
+      <div id="jobTitle">—</div>
+      <div class="meter">
+        <div class="bar"><div class="fill" id="cleanFill"></div></div>
+        <div class="pct" id="cleanPct">0%</div>
+      </div>
+      <div id="jobTimer">0:00</div>
+      <button class="btn ghost" id="btnSound" style="padding:5px 11px; font-size:13px;">🔊</button>
+    </div>
+    <div id="modeRow">
+      <button class="modeBtn on" id="mWand">Wand · turbo nozzle</button>
+      <button class="modeBtn" id="mSC">Surface cleaner</button>
+      <button class="modeBtn soft" id="mSoft">Soft wash (DS SH)</button>
+      <button class="modeBtn deg" id="mDeg">Degreaser</button>
+    </div>
+    <div id="canvasWrap">
+      <canvas id="surfC"></canvas>
+      <canvas id="deepC"></canvas>
+      <canvas id="stainC"></canvas>
+      <canvas id="grimeC"></canvas>
+      <canvas id="fxC"></canvas>
+      <div id="warnFlash"><span id="warnTxt">Too much pressure!</span></div>
+    </div>
+    <div id="jobActions">
+      <button class="btn" id="btnFinish" disabled>Finish job</button>
+      <button class="btn ghost" id="btnWalk">Walk away</button>
+    </div>
+    <div id="jobNote"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="overlay"><div id="overlayBox">
+  <h2 id="ovTitle"></h2>
+  <div class="big" id="ovBig"></div>
+  <p id="ovBody"></p>
+  <button class="btn" id="ovBtn">Keep washing</button>
+</div></div>
+
+<script>
+"use strict";
+/* =========================================================
+   ROYALE WITH GRIME — a pressure washing simulator
+   ========================================================= */
+
+const $ = id => document.getElementById(id);
+const fmt$ = n => (n<0?"-$":"$") + Math.abs(Math.round(n)).toLocaleString();
+
+/* ---------------- catalog ---------------- */
+const WASHERS = [
+  {id:"w0", name:"SunBrite e1800 (electric)", gpm:1.2, psi:1800, price:159,
+   drive:"Direct drive · 120V · axial cam pump",
+   blurb:"A homeowner toy. It'll clean a patio chair by Thursday. You will hate your life."},
+  {id:"w1", name:"Honda GX200 · AR RMV2.5G30", gpm:2.5, psi:3000, price:679,
+   drive:"Direct drive · triplex plunger pump",
+   blurb:"Honest little cold-water unit. Direct drive spins the pump at 3,400 RPM, so it earns its keep but wears faster."},
+  {id:"w2", name:"Honda GX390 · General EZ4040", gpm:4.0, psi:4000, price:1949,
+   drive:"Belt drive · triplex · 1,450 pump RPM",
+   blurb:"The Treasure Coast workhorse. Belt drive cuts pump RPM way down — this thing outlives your truck. 4/4 is the residential sweet spot."},
+  {id:"w3", name:"Honda GX690 · Udor GKC 5.5", gpm:5.5, psi:3500, price:3899,
+   drive:"Gear drive · V-twin · low-RPM pump",
+   blurb:"Volume over violence. 5.5 GPM rinses like a fire hose and feeds a 24\" surface cleaner without bogging."},
+  {id:"w4", name:"Twin-Cyl 8 GPM Pro Skid", gpm:8.0, psi:3500, price:6499,
+   drive:"Belt drive · big-block V-twin · skid mount",
+   blurb:"Commercial flatwork money machine. At 8 GPM you're not cleaning concrete, you're erasing it."},
+];
+const SCS = [
+  {id:"s0", name:"Whisper-Pro 16\"", inches:16, minGpm:2.5, price:249,
+   blurb:"Two-nozzle bar, entry size. Fine for sidewalks; small bites on big driveways."},
+  {id:"s1", name:"Whisper-Pro Classic 19\"", inches:19, minGpm:3.5, price:429,
+   blurb:"The classic residential spinner. Even passes, no zebra striping, needs ≥3.5 GPM to float right."},
+  {id:"s2", name:"Big Guy 28\"", inches:28, minGpm:5.5, price:899,
+   blurb:"Parking-lot eater. Starves and stripes below 5.5 GPM — pair with a big machine."},
+];
+const ACCS = [
+  {id:"inj", name:"High-draw downstream injector", price:39, key:"injector",
+   spec:"2.1mm orifice · ~10:1 draw after dilution",
+   blurb:"Pulls SH into the line after the pump so your packings live. Mandatory for house washes."},
+  {id:"xjet", name:"X-Jet M5 variable nozzle", price:119, key:"xjet",
+   spec:"Adjustable proportioner · shoots chems 30+ ft",
+   blurb:"Draws straight from the bucket — hotter mix, longer reach. Soft wash goes 25% faster."},
+];
+const SH_DEALS = [
+  {gal:5, price:24, label:"5-gal carboy"},
+  {gal:15, price:63, label:"3 × 5-gal"},
+  {gal:30, price:115, label:"30-gal drum"},
+];
+const DEG_DEALS = [
+  {gal:5, price:39, label:"5-gal pail"},
+  {gal:15, price:99, label:"3 × 5-gal"},
+];
+
+/* ---------------- state ---------------- */
+const S = {
+  cash:5000, day:1, rep:0, repPts:0, jobsDone:0,
+  washer:null, fleet:[], scOwned:[], injector:false, xjet:false, sh:0, degreaser:0,
+  jobs:[], active:null, won:false, dayOverhead:45,
+};
+function bestSC(){
+  if(!S.washer) return null;
+  const usable=S.scOwned.filter(s=>S.washer.gpm>=s.minGpm);
+  if(!usable.length) return null;
+  return usable.reduce((a,b)=>a.inches>=b.inches?a:b);
+}
+
+/* ---------------- toast / overlay ---------------- */
+let toastT=null;
+function toast(msg){
+  const t=$("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2600);
+}
+function overlay(title,big,body,btn){
+  $("ovTitle").textContent=title; $("ovBig").textContent=big;
+  $("ovBody").textContent=body; $("ovBtn").textContent=btn||"Keep washing";
+  $("overlay").classList.add("show");
+}
+$("ovBtn").onclick=()=>$("overlay").classList.remove("show");
+
+/* ---------------- HUD ---------------- */
+const REP_NAMES=["Unknown outfit","Word is spreading","Neighborhood name","Treasure Coast trusted","Booked solid","PSL legend"];
+function repStars(){ return "★".repeat(S.rep)+"☆".repeat(5-S.rep); }
+function renderHUD(){
+  const c=$("hCash"); c.textContent=fmt$(S.cash);
+  c.classList.toggle("broke", S.cash<0);
+  $("hDay").textContent=S.day;
+  $("hJobs").textContent=S.jobsDone+" job"+(S.jobsDone===1?"":"s")+" done";
+  $("hRep").textContent=repStars();
+  $("hRepSub").textContent=REP_NAMES[S.rep];
+  $("hSH").textContent=S.sh.toFixed(1)+" gal";
+  document.querySelector("#hud .stat:nth-child(4) .sub").textContent="degreaser: "+S.degreaser.toFixed(1)+" gal";
+  $("hRig").textContent = S.washer ? S.washer.gpm.toFixed(1)+" GPM @ "+S.washer.psi.toLocaleString()+" PSI" : "No machine";
+  const open=S.jobs.filter(j=>!j.done).length;
+  const b=$("phoneBadge"); b.style.display=open?"inline-block":"none"; b.textContent=open;
+}
+
+/* ---------------- shop ---------------- */
+function card(html, owned){
+  const d=document.createElement("div");
+  d.className="card"+(owned?" owned":"");
+  d.innerHTML=html; return d;
+}
+function renderShop(){
+  const wc=$("washerCards"); wc.innerHTML="";
+  WASHERS.forEach(w=>{
+    const owned = S.fleet.some(x=>x.id===w.id);
+    const active = S.washer && S.washer.id===w.id;
+    const c=card(`
+      ${active?'<div class="ownedTag">On the trailer</div>':owned?'<div class="ownedTag" style="background:var(--ink-soft)">In the fleet</div>':""}
+      <h3>${w.name}</h3>
+      <div class="specline">${w.gpm.toFixed(1)} GPM @ ${w.psi.toLocaleString()} PSI</div>
+      <div class="meta">${w.drive}</div>
+      <div class="blurb">${w.blurb}</div>
+      <div class="buyrow" style="flex-wrap:wrap; gap:6px;">
+        <span class="price">${fmt$(w.price)}</span>
+        ${!owned?`<button class="btn" data-w="${w.id}" ${S.cash<w.price?"disabled":""}>Buy</button>`:""}
+        ${owned&&!active?`<button class="btn ghost" data-use="${w.id}">Run this rig</button>`:""}
+        ${owned?`<button class="btn ghost" data-sell="${w.id}">Sell · ${fmt$(Math.round(w.price*0.5))}</button>`:""}
+      </div>`, owned);
+    wc.appendChild(c);
+  });
+  wc.querySelectorAll("button[data-w]").forEach(b=>b.onclick=()=>buyWasher(b.dataset.w));
+  wc.querySelectorAll("button[data-use]").forEach(b=>b.onclick=()=>useWasher(b.dataset.use));
+  wc.querySelectorAll("button[data-sell]").forEach(b=>b.onclick=()=>sellWasher(b.dataset.sell));
+
+  const sc=$("scCards"); sc.innerHTML="";
+  SCS.forEach(s=>{
+    const owned=S.scOwned.some(x=>x.id===s.id);
+    const gpmOk = S.washer && S.washer.gpm>=s.minGpm;
+    const c=card(`
+      ${owned?'<div class="ownedTag">In the truck</div>':""}
+      <h3>${s.name} surface cleaner</h3>
+      <div class="specline">${s.inches}" deck · needs ≥ ${s.minGpm} GPM</div>
+      <div class="blurb">${s.blurb}</div>
+      ${!gpmOk?`<div class="reqwarn">⚠ Your machine ${S.washer?("flows "+S.washer.gpm+" GPM"):"doesn't exist yet"} — this deck will stripe.</div>`:""}
+      <div class="buyrow"><span class="price">${fmt$(s.price)}</span>
+        <button class="btn" data-s="${s.id}" ${owned||S.cash<s.price?"disabled":""}>${owned?"Owned":"Buy"}</button>
+      </div>`, owned);
+    sc.appendChild(c);
+  });
+  sc.querySelectorAll("button[data-s]").forEach(b=>b.onclick=()=>buySC(b.dataset.s));
+
+  const ch=$("chemCards"); ch.innerHTML="";
+  ACCS.forEach(a=>{
+    const owned=S[a.key];
+    const c=card(`
+      ${owned?'<div class="ownedTag">Owned</div>':""}
+      <h3>${a.name}</h3>
+      <div class="specline">${a.spec}</div>
+      <div class="blurb">${a.blurb}</div>
+      <div class="buyrow"><span class="price">${fmt$(a.price)}</span>
+        <button class="btn cyan" data-a="${a.id}" ${owned||S.cash<a.price?"disabled":""}>${owned?"Owned":"Buy"}</button>
+      </div>`, owned);
+    ch.appendChild(c);
+  });
+  ch.querySelectorAll("button[data-a]").forEach(b=>b.onclick=()=>buyAcc(b.dataset.a));
+
+  const shc=card(`
+    <h3>12.5% Sodium Hypochlorite</h3>
+    <div class="specline">Pool-grade SH · downstream to ~1%</div>
+    <div class="blurb">The active ingredient in every house wash. Burns algae, mold and mildew off siding so low pressure can rinse it. You have <b>${S.sh.toFixed(1)} gal</b>.</div>
+    <div class="buyrow" style="flex-wrap:wrap; gap:6px;">
+      ${SH_DEALS.map((d,i)=>`<button class="btn cyan" data-sh="${i}" ${S.cash<d.price?"disabled":""}>${d.label} · ${fmt$(d.price)}</button>`).join("")}
+    </div>`);
+  ch.appendChild(shc);
+  ch.querySelectorAll("button[data-sh]").forEach(b=>b.onclick=()=>{
+    const d=SH_DEALS[+b.dataset.sh];
+    S.cash-=d.price; S.sh+=d.gal;
+    toast(`+${d.gal} gal SH. Don't get it on the truck paint.`);
+    renderHUD(); renderShop(); renderPhone();
+  });
+
+  const degc=card(`
+    <h3>HD Butyl Degreaser Concentrate</h3>
+    <div class="specline">Purple-power class · emulsifies petroleum</div>
+    <div class="blurb">SH can't touch oil, grease, or tire rubber — this can. Sprayer-apply on the stain, let it dwell and emulsify, then rinse. You have <b>${S.degreaser.toFixed(1)} gal</b>.</div>
+    <div class="buyrow" style="flex-wrap:wrap; gap:6px;">
+      ${DEG_DEALS.map((d,i)=>`<button class="btn" style="background:#7b4fa6" data-dg="${i}" ${S.cash<d.price?"disabled":""}>${d.label} · ${fmt$(d.price)}</button>`).join("")}
+    </div>`);
+  ch.appendChild(degc);
+  ch.querySelectorAll("button[data-dg]").forEach(b=>b.onclick=()=>{
+    const d=DEG_DEALS[+b.dataset.dg];
+    S.cash-=d.price; S.degreaser+=d.gal;
+    toast(`+${d.gal} gal degreaser. Oil stains hate this one trick.`);
+    renderHUD(); renderShop(); renderPhone();
+  });
+}
+function buyWasher(id){
+  const w=WASHERS.find(x=>x.id===id);
+  if(S.fleet.some(x=>x.id===id)){ toast("You already own that machine."); return; }
+  if(S.cash<w.price){ toast("Not enough cash."); return; }
+  S.cash-=w.price; S.fleet.push(w); S.washer=w;
+  toast(`Bought the ${w.name}. It's on the trailer now.`);
+  if(S.jobs.length===0) genJobs();
+  renderHUD(); renderShop(); renderPhone();
+}
+function sellWasher(id){
+  if(S.active){ toast("Finish the current job before selling gear."); return; }
+  const i=S.fleet.findIndex(x=>x.id===id); if(i<0) return;
+  const w=S.fleet[i], back=Math.round(w.price*0.5);
+  S.fleet.splice(i,1); S.cash+=back;
+  if(S.washer && S.washer.id===id){
+    S.washer = S.fleet.length ? S.fleet.reduce((a,b)=>a.gpm>=b.gpm?a:b) : null;
+  }
+  toast(`Sold the ${w.name} for ${fmt$(back)}.`);
+  renderHUD(); renderShop(); renderPhone();
+}
+function useWasher(id){
+  if(S.active){ toast("You're mid-job — can't swap machines now."); return; }
+  const w=S.fleet.find(x=>x.id===id); if(!w) return;
+  S.washer=w;
+  toast(`${w.name} loaded on the trailer.`);
+  renderHUD(); renderShop(); renderPhone();
+}
+function buySC(id){
+  const s=SCS.find(x=>x.id===id);
+  if(S.cash<s.price || S.scOwned.some(x=>x.id===id)) return;
+  S.cash-=s.price; S.scOwned.push(s);
+  toast(`${s.inches}" deck loaded up. You now carry ${S.scOwned.length} deck${S.scOwned.length>1?"s":""}.`);
+  renderHUD(); renderShop(); renderPhone();
+}
+function buyAcc(id){
+  const a=ACCS.find(x=>x.id===id);
+  if(S.cash<a.price) return;
+  S.cash-=a.price; S[a.key]=true;
+  toast(a.id==="xjet"?"X-Jet M5 acquired. Check out the big brain on you.":"Injector plumbed in downstream of the unloader.");
+  renderHUD(); renderShop(); renderPhone();
+}
+
+/* ---------------- jobs ---------------- */
+const NAMES=["Marsellus W.","Mia","Vincent","Jules","Butch","Capt. Koons","Lance","Jody","Winston (The Wolf)","Esmerelda","Brett","Marvin","Fabienne","Maynard's neighbor","Jimmie","Bonnie","Raquel","Zed's landlord"];
+const JOB_DEFS = {
+  driveway:{
+    label:"Driveway",
+    surf:"concrete",
+    sizes:[ {s:"S", w:760,h:380, pay:[140,190], par:75,  fuel:6},
+            {s:"M", w:860,h:430, pay:[210,280], par:110, fuel:8},
+            {s:"L", w:920,h:480, pay:[320,420], par:150, fuel:11} ],
+    texts:[
+      "Hey — driveway's got tire marks and a big oil stain from my brother-in-law's project Camaro. How soon can you come?",
+      "Saw your yard sign on Gatlin Blvd. Driveway hasn't been cleaned since we bought the place.",
+      "HOA letter says my driveway is 'a community eyesore.' Help.",
+      "My neighbor got theirs done and now mine looks like a crime scene. Quote me."
+    ],
+    minRep:0
+  },
+  patio:{
+    label:"Pool deck / patio",
+    surf:"pavers",
+    sizes:[ {s:"S", w:760,h:380, pay:[160,220], par:85,  fuel:6},
+            {s:"M", w:860,h:430, pay:[240,320], par:120, fuel:8} ],
+    texts:[
+      "Pool deck pavers are green and SLIPPERY. Kid almost ate it yesterday.",
+      "Patio's growing something. I don't want to know what. Just make it go away.",
+      "Getting the backyard ready for an engagement party — pavers need to look brand new."
+    ],
+    minRep:0
+  },
+  house:{
+    label:"House soft wash",
+    surf:"siding",
+    sizes:[ {s:"M", w:860,h:430, pay:[380,520], par:140, fuel:10, shNeed:4},
+            {s:"L", w:920,h:480, pay:[520,700], par:180, fuel:13, shNeed:6} ],
+    texts:[
+      "North side of the house is GREEN. Realtor says it has to be washed before we list.",
+      "Algae streaks all down the vinyl siding. Last guy used high pressure and blew water behind the boards — please don't do that.",
+      "House wash quote? Stucco's got mildew shadows under every window.",
+      "Wife says the house 'looks haunted.' It's just algae. I hope."
+    ],
+    minRep:2,
+    req:"Needs downstream injector + SH"
+  },
+  commercial:{
+    label:"Commercial flatwork",
+    surf:"concrete",
+    sizes:[ {s:"L", w:940,h:500, pay:[750,1100], par:200, fuel:18},
+            {s:"XL",w:940,h:540, pay:[1100,1500], par:240, fuel:24} ],
+    texts:[
+      "Property manager at the Village Shoppes — sidewalks and storefront aprons covered in gum shadows and grime. Night work OK.",
+      "Gas station pads need degreasing and washing before the franchise inspection Friday.",
+      "Strip mall walkways, roughly 4,000 sq ft. Send your COI and a number."
+    ],
+    minRep:3,
+    req:"Needs a surface cleaner (≥19\") and ≥4 GPM"
+  }
+};
+let jobSeq=1;
+function rint(a,b){ return Math.floor(a+Math.random()*(b-a+1)); }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+function genJobs(){
+  S.jobs = [];
+  const n = 3 + Math.min(2, S.rep);
+  const types = Object.keys(JOB_DEFS).filter(k=>JOB_DEFS[k].minRep<=S.rep);
+  // guarantee at least one big-type job once unlocked
+  for(let i=0;i<n;i++){
+    const tKey = pick(types);
+    const def = JOB_DEFS[tKey];
+    const size = pick(def.sizes);
+    const pay = rint(size.pay[0], size.pay[1]);
+    S.jobs.push({
+      id:jobSeq++, type:tKey, label:def.label, surf:def.surf,
+      size, pay, name:pick(NAMES), text:pick(def.texts),
+      shNeed:size.shNeed||0, done:false
+    });
+  }
+}
+function jobBlockers(j){
+  const out=[];
+  if(!S.washer) out.push("You need a pressure washer.");
+  if(j.type==="house"){
+    if(!(S.injector||S.xjet)) out.push("Needs a downstream injector or X-Jet.");
+    if(S.sh < j.shNeed) out.push(`Needs ~${j.shNeed} gal SH (you have ${S.sh.toFixed(1)}).`);
+  }
+  if(j.type==="commercial"){
+    const decks=S.scOwned.filter(s=>s.inches>=19);
+    if(!decks.length) out.push("Needs a 19\"+ surface cleaner.");
+    else if(S.washer && !decks.some(s=>S.washer.gpm>=s.minGpm)) out.push(`Your ${S.washer.gpm} GPM machine starves your big deck${decks.length>1?"s":""}.`);
+    if(S.washer && S.washer.gpm<4) out.push("Needs ≥4 GPM.");
+  }
+  return out;
+}
+function renderPhone(){
+  const list=$("jobList"); list.innerHTML="";
+  const open=S.jobs.filter(j=>!j.done);
+  if(!open.length){
+    list.innerHTML=`<div class="emptyPhone">${S.washer? "No new messages. Hit <b>Next day</b> — the ads are running." : "Crickets. Nobody hires a washer with no washer.<br>Go buy a machine at the Supply Depot."}</div>`;
+  }
+  S.jobs.forEach(j=>{
+    const blockers=jobBlockers(j);
+    const d=document.createElement("div");
+    d.className="msg"+(j.done?" done":"");
+    d.innerHTML=`
+      <div class="from">${j.name}</div>
+      <div class="jobtype">${j.label} · size ${j.size.s}</div>
+      <div class="body">“${j.text}”</div>
+      <div class="row">
+        <span class="pay">${fmt$(j.pay)}</span>
+        ${j.done?(j.lost?'<span style="font-size:11px;color:#ff8a7a;font-weight:800;">LOST ✗</span>':'<span style="font-size:11px;color:#7ee2a8;font-weight:800;">DONE ✓</span>')
+          :`<button class="btn" data-j="${j.id}" ${blockers.length?"disabled":""}>Accept</button>`}
+      </div>
+      ${blockers.map(b=>`<div class="req bad">⚠ ${b}</div>`).join("")}
+      ${(!blockers.length && JOB_DEFS[j.type].req && !j.done)?`<div class="req">✓ ${JOB_DEFS[j.type].req} — you're equipped.</div>`:""}
+    `;
+    list.appendChild(d);
+  });
+  list.querySelectorAll("button[data-j]").forEach(b=>b.onclick=()=>startJob(+b.dataset.j));
+  $("phClock").textContent = (7+((S.day*3)%5))+":"+String((S.day*17)%60).padStart(2,"0")+" AM";
+}
+$("btnNextDay").onclick=()=>{
+  if(S.active){ toast("Finish or walk away from the current job first."); return; }
+  S.day++;
+  S.cash -= S.dayOverhead;
+  toast(`Day ${S.day}. Fuel + insurance ran you ${fmt$(S.dayOverhead)}.`);
+  genJobs(); renderHUD(); renderPhone(); checkBroke();
+};
+function checkBroke(){
+  if(S.cash < -500){
+    overlay("Repo'd.", fmt$(S.cash),
+      "The bank took the trailer back. In this economy, an honest washer can't even go negative five hundred bucks. Refresh the page to start over.",
+      "Sit in the dark");
+  }
+}
+
+/* ---------------- tabs ---------------- */
+const SCREENS={shop:"scrShop", phone:"scrPhone", job:"scrJob"};
+function showScreen(k){
+  Object.entries(SCREENS).forEach(([key,id])=>{
+    $(id).classList.toggle("on", key===k);
+  });
+  $("tabShop").classList.toggle("on",k==="shop");
+  $("tabPhone").classList.toggle("on",k==="phone");
+  $("tabJob").classList.toggle("on",k==="job");
+}
+$("tabShop").onclick=()=>showScreen("shop");
+$("tabPhone").onclick=()=>showScreen("phone");
+$("tabJob").onclick=()=>{ if(S.active) showScreen("job"); };
+
+/* =========================================================
+   THE MINIGAME
+   ========================================================= */
+const surfC=$("surfC"), deepC=$("deepC"), stainC=$("stainC"), grimeC=$("grimeC"), fxC=$("fxC");
+const sctx=surfC.getContext("2d"), dpctx=deepC.getContext("2d"), stctx=stainC.getContext("2d"),
+      gctx=grimeC.getContext("2d"), fctx=fxC.getContext("2d");
+
+let J=null; // active job runtime
+let mode="wand";
+let drawing=false, lastPt=null;
+let timerInt=null, sampleInt=null, fadeInt=null;
+let treatC=null, tctx=null; // soft-wash chemical treatment layer
+let treatD=null, dctx=null; // degreaser treatment layer
+
+function startJob(id){
+  const j=S.jobs.find(x=>x.id===id);
+  if(!j||j.done) return;
+  if(S.active && S.active.id!==id){ toast("You're already on a job. Finish it or walk away first."); return; }
+  S.active=j;
+  $("tabJob").classList.remove("disabled");
+  showScreen("job");
+  buildJobCanvas(j);
+  $("jobTitle").textContent = `${j.label} · ${j.name} · ${fmt$(j.pay)}`;
+  $("btnFinish").disabled=true;
+  updateModeButtons();
+  // default mode
+  if(j.type==="house") setMode("soft");
+  else if(j.type==="commercial" && bestSC()) setMode("sc");
+  else setMode("wand");
+  J.t0=Date.now();
+  clearInterval(timerInt); timerInt=setInterval(tickTimer,500);
+  clearInterval(sampleInt); sampleInt=setInterval(sampleProgress,450);
+  clearInterval(fadeInt); fadeInt=setInterval(chemFadeTick,120);
+  renderJobNote();
+}
+function renderJobNote(){
+  const j=S.active; if(!j) return;
+  let n="";
+  if(j.surf==="siding"){
+    n=`<b>Soft wash job.</b> Spray the SH on and let it dwell — treated algae melts off over a few seconds, no pressure needed. Each pass drinks from your ${S.sh.toFixed(1)} gal tank. `
+     + `Blasting vinyl with a ${S.washer.psi.toLocaleString()} PSI wand voids your insurance and your dignity — damage comes out of your pay.`;
+  } else if(j.type==="commercial"){
+    const deck=bestSC();
+    n=`<b>Flatwork at the shoppes.</b> Par time ${fmtTime(j.size.par)} — beat it for a 15% bonus. The ${deck?deck.inches+'" deck':"wand"} strips the film and surface scum, but oil that's soaked into the concrete only comes out with <b>degreaser</b> — coat the shadows and let it dwell.`;
+  } else {
+    n=`Par time ${fmtTime(j.size.par)} — beat it for a 15% tip. Pressure strips the film, tire rubber, and the top of each oil stain — but the soaked-in shadow underneath only lifts with <b>degreaser</b>. Get to 95% to collect; 99%+ pays a spotless bonus.`;
+  }
+  $("jobNote").innerHTML=n;
+}
+function fmtTime(s){ return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0"); }
+function tickTimer(){
+  if(!J||!S.active) return;
+  const el=Math.floor((Date.now()-J.t0)/1000);
+  $("jobTimer").textContent=fmtTime(el)+" / par "+fmtTime(S.active.size.par);
+  $("jobTimer").style.color = el>S.active.size.par ? "var(--bad)" : "var(--ink-soft)";
+}
+
+/* ---------- surface painters ---------- */
+function buildJobCanvas(j){
+  const W=j.size.w, H=j.size.h;
+  [surfC,deepC,stainC,grimeC,fxC].forEach(c=>{c.width=W; c.height=H;});
+  $("canvasWrap").style.height = "auto";
+  $("canvasWrap").style.aspectRatio = W+" / "+H;
+
+  const persp = j.surf!=="siding";
+  J={w:W,h:H, total:0, damage:0, lowSHWarned:false, stainHinted:false, t0:Date.now(),
+     persp, topY: persp? H*0.30 : 0, wallTop: persp? 0 : H*0.15, wallBot: persp? H : H*0.97};
+
+  treatC=document.createElement("canvas"); treatC.width=W; treatC.height=H;
+  tctx=treatC.getContext("2d");
+  treatD=document.createElement("canvas"); treatD.width=W; treatD.height=H;
+  dctx=treatD.getContext("2d");
+
+  if(j.surf==="siding") paintHouseScene(W,H);
+  else paintFlatScene(j,W,H);
+
+  paintStains(j,W,H);
+  paintGrime(j,W,H);
+  // nothing to clean on the water itself
+  if(J.pool){
+    [gctx,stctx,dpctx].forEach(c=>{
+      c.save(); c.globalCompositeOperation="destination-out"; c.fillStyle="#000"; c.globalAlpha=1;
+      c.beginPath(); c.ellipse(J.pool.x,J.pool.y,J.pool.rx,J.pool.ry,0,0,7); c.fill(); c.restore();
+    });
+  }
+  fctx.clearRect(0,0,W,H);
+
+  // count initial dirty pixels
+  J.total = countDirty().any;
+  updateProgress(0);
+}
+/* ---------- perspective helpers ---------- */
+function depthFactor(y){
+  if(!J||!J.persp) return 1;
+  const t=(y-J.topY)/(J.h-J.topY);
+  return Math.max(0.3, Math.min(1, 0.32+0.68*t));
+}
+function surfXAt(y){
+  const W=J.w,H=J.h,topY=J.topY;
+  const t=Math.max(0,Math.min(1,(y-topY)/(H-topY)));
+  const lTop=W*0.34, rTop=W*0.66, lBot=W*0.02, rBot=W*0.98;
+  return [lTop+(lBot-lTop)*t, rTop+(rBot-rTop)*t];
+}
+function clipSurface(ctx){
+  ctx.beginPath();
+  if(J.persp){
+    const H=J.h, topY=J.topY;
+    const [l0,r0]=surfXAt(topY), [l1,r1]=surfXAt(H);
+    ctx.moveTo(l0,topY); ctx.lineTo(r0,topY); ctx.lineTo(r1,H); ctx.lineTo(l1,H); ctx.closePath();
+  } else {
+    ctx.rect(0,J.wallTop,J.w,J.wallBot-J.wallTop);
+  }
+  ctx.clip();
+}
+function paintFlatScene(j,W,H){
+  const topY=J.topY;
+  const commercial = j.type==="commercial";
+  // sky
+  let g=sctx.createLinearGradient(0,0,0,topY);
+  g.addColorStop(0,"#9fd7ee"); g.addColorStop(1,"#e8f4f7");
+  sctx.fillStyle=g; sctx.fillRect(0,0,W,topY);
+
+  if(commercial){
+    // strip-mall storefront across the horizon
+    sctx.fillStyle="#d9c9a8"; sctx.fillRect(W*0.04,topY-H*0.22,W*0.92,H*0.22); // stucco facade
+    sctx.fillStyle="#5a4632"; sctx.fillRect(W*0.04,topY-H*0.22,W*0.92,H*0.045); // sign band
+    sctx.fillStyle="#f2e9d6"; sctx.font="bold "+Math.round(H*0.028)+"px Arial";
+    sctx.textBaseline="middle";
+    sctx.fillText("VILLAGE  SHOPPES", W*0.36, topY-H*0.197);
+    // storefront glass + doors
+    for(let i=0;i<4;i++){
+      const x=W*(0.08+i*0.22);
+      sctx.fillStyle="#28323c"; sctx.fillRect(x,topY-H*0.155,W*0.17,H*0.155);
+      const gg=sctx.createLinearGradient(x,topY-H*0.155,x+W*0.17,topY);
+      gg.addColorStop(0,"#7d97ab"); gg.addColorStop(0.5,"#a9c2d4"); gg.addColorStop(1,"#6b8499");
+      sctx.fillStyle=gg; sctx.fillRect(x+4,topY-H*0.148,W*0.17-8,H*0.141);
+      sctx.fillStyle="#28323c"; sctx.fillRect(x+W*0.075,topY-H*0.148,4,H*0.141); // door mullion
+    }
+    // bollards at the curb
+    sctx.fillStyle="#b8b43c";
+    for(let i=0;i<6;i++){ sctx.fillRect(W*(0.10+i*0.16), topY-H*0.035, 7, H*0.035); }
+    // asphalt apron around the work slab
+    sctx.fillStyle="#75736e"; sctx.fillRect(0,topY,W,H-topY);
+    for(let i=0;i<W*H/700;i++){
+      const y=topY+Math.random()*(H-topY), d=depthFactor(y);
+      sctx.fillStyle=Math.random()<.5?"rgba(0,0,0,.18)":"rgba(255,255,255,.07)";
+      sctx.fillRect(Math.random()*W,y,2*d,2*d);
+    }
+    // parking stripes on the asphalt
+    sctx.strokeStyle="rgba(240,230,120,.5)";
+    [0.12,0.88].forEach(u=>{
+      const [lt,rt]=surfXAt(topY), [lb,rb]=surfXAt(H);
+      sctx.lineWidth=5;
+      sctx.beginPath();
+      sctx.moveTo((u<0.5?0:W), H*0.7);
+      sctx.lineTo(u<0.5? lt*0.5 : (rt+W)/2, topY+H*0.05);
+      sctx.stroke();
+    });
+  } else {
+    // residential: house at the horizon
+    sctx.fillStyle="#ece5d4"; sctx.fillRect(W*0.20,topY-H*0.17,W*0.60,H*0.17);
+    sctx.fillStyle="#a8553f";
+    sctx.beginPath(); sctx.moveTo(W*0.16,topY-H*0.17); sctx.lineTo(W*0.5,topY-H*0.30); sctx.lineTo(W*0.84,topY-H*0.17); sctx.closePath(); sctx.fill();
+    sctx.fillStyle="#8d9aa5"; sctx.fillRect(W*0.37,topY-H*0.13,W*0.26,H*0.13); // garage door
+    sctx.strokeStyle="rgba(0,0,0,.18)"; sctx.lineWidth=1;
+    for(let i=1;i<5;i++){ const y=topY-H*0.13+i*H*0.026;
+      sctx.beginPath(); sctx.moveTo(W*0.37,y); sctx.lineTo(W*0.63,y); sctx.stroke(); }
+    sctx.fillStyle="#5c6b78"; sctx.fillRect(W*0.245,topY-H*0.12,W*0.05,H*0.12); // front door
+    // lawn
+    sctx.fillStyle="#7aa35d"; sctx.fillRect(0,topY,W,H-topY);
+    for(let i=0;i<W*H/500;i++){
+      const y=topY+Math.random()*(H-topY), d=depthFactor(y);
+      sctx.fillStyle=Math.random()<.5?"rgba(45,85,35,.25)":"rgba(195,225,140,.22)";
+      sctx.fillRect(Math.random()*W, y, 2*d, 2*d);
+    }
+  }
+  // the slab, receding away from you
+  sctx.save(); clipSurface(sctx);
+  if(j.surf==="pavers"){
+    sctx.fillStyle="#b08e6f"; sctx.fillRect(0,topY,W,H-topY);
+    // perspective paver rows
+    const n=14;
+    for(let k=0;k<n;k++){
+      const s0=Math.pow(k/n,1.9), s1=Math.pow((k+1)/n,1.9);
+      const y0=topY+(H-topY)*s0, y1=topY+(H-topY)*s1;
+      const ym=(y0+y1)/2, [l,r]=surfXAt(ym);
+      const cols=9;
+      for(let c=0;c<cols;c++){
+        const u0=c/cols+(k%2?0.5/cols:0);
+        const tone=["#caa183","#c2997b","#d1b094","#bd9173"][(k*7+c)%4];
+        sctx.fillStyle=tone;
+        sctx.fillRect(l+(r-l)*u0+1, y0+1, (r-l)/cols-2, (y1-y0)-2);
+      }
+    }
+  } else {
+    const cg=sctx.createLinearGradient(0,topY,0,H);
+    cg.addColorStop(0,"#c6c3ba"); cg.addColorStop(1,"#d8d5cc");
+    sctx.fillStyle=cg; sctx.fillRect(0,topY,W,H-topY);
+    // speckle
+    for(let i=0;i<W*H/120;i++){
+      const y=topY+Math.random()*(H-topY), d=depthFactor(y);
+      sctx.fillStyle = Math.random()<.5 ? "rgba(0,0,0,.06)" : "rgba(255,255,255,.2)";
+      const [l,r]=surfXAt(y);
+      sctx.fillRect(l+Math.random()*(r-l), y, 1.8*d, 1.8*d);
+    }
+    // expansion joints — horizontal slabs bunch toward the horizon
+    sctx.strokeStyle="rgba(60,60,55,.45)";
+    for(let k=1;k<5;k++){
+      const s=Math.pow(k/5,1.9), y=topY+(H-topY)*s;
+      const [l,r]=surfXAt(y);
+      sctx.lineWidth=3*depthFactor(y);
+      sctx.beginPath(); sctx.moveTo(l,y); sctx.lineTo(r,y); sctx.stroke();
+    }
+    // vertical joints converge to the vanishing point
+    [0.33,0.66].forEach(u=>{
+      const [lt,rt]=surfXAt(topY), [lb,rb]=surfXAt(H);
+      sctx.lineWidth=2.5;
+      sctx.beginPath();
+      sctx.moveTo(lt+(rt-lt)*u, topY);
+      sctx.lineTo(lb+(rb-lb)*u, H);
+      sctx.stroke();
+    });
+  }
+  sctx.restore();
+  // slab edges
+  sctx.strokeStyle="rgba(50,50,45,.5)"; sctx.lineWidth=2;
+  const [l0,r0]=surfXAt(topY), [l1,r1]=surfXAt(H);
+  sctx.beginPath(); sctx.moveTo(l0,topY); sctx.lineTo(l1,H); sctx.moveTo(r0,topY); sctx.lineTo(r1,H); sctx.stroke();
+
+  // the pool, if this is a pool deck job
+  if(j.type==="patio"){
+    const px=W*0.5, py=topY+(H-topY)*0.46;
+    const prx=W*0.21, pry=prx*0.40;
+    J.pool={x:px,y:py,rx:prx,ry:pry};
+    // coping ring
+    sctx.fillStyle="#e9e2d2";
+    sctx.beginPath(); sctx.ellipse(px,py,prx+14,pry+10,0,0,7); sctx.fill();
+    sctx.strokeStyle="rgba(90,80,65,.4)"; sctx.lineWidth=2;
+    sctx.beginPath(); sctx.ellipse(px,py,prx+14,pry+10,0,0,7); sctx.stroke();
+    // water
+    const wg=sctx.createRadialGradient(px,py-pry*0.3,prx*0.15,px,py,prx);
+    wg.addColorStop(0,"#6fd0e8"); wg.addColorStop(0.6,"#2fa3c4"); wg.addColorStop(1,"#1b6f8e");
+    sctx.fillStyle=wg;
+    sctx.beginPath(); sctx.ellipse(px,py,prx,pry,0,0,7); sctx.fill();
+    // caustic shimmer
+    sctx.strokeStyle="rgba(255,255,255,.45)"; sctx.lineWidth=1.5;
+    for(let i=0;i<5;i++){
+      const cy=py-pry*0.6+i*pry*0.3;
+      sctx.beginPath();
+      sctx.moveTo(px-prx*0.6, cy);
+      sctx.bezierCurveTo(px-prx*0.2,cy-4, px+prx*0.2,cy+4, px+prx*0.6,cy);
+      sctx.stroke();
+    }
+    // waterline shadow
+    sctx.strokeStyle="rgba(10,50,70,.5)"; sctx.lineWidth=3;
+    sctx.beginPath(); sctx.ellipse(px,py,prx,pry,0,0,7); sctx.stroke();
+  } else {
+    J.pool=null;
+  }
+}
+function paintHouseScene(W,H){
+  // sky band
+  let g=sctx.createLinearGradient(0,0,0,H*0.14);
+  g.addColorStop(0,"#9fd7ee"); g.addColorStop(1,"#dceef4");
+  sctx.fillStyle=g; sctx.fillRect(0,0,W,H*0.14);
+  // eave + soffit shadow
+  sctx.fillStyle="#6b6055"; sctx.fillRect(0,H*0.115,W,H*0.022);
+  sctx.fillStyle="rgba(0,0,0,.18)"; sctx.fillRect(0,H*0.137,W,H*0.02);
+  // vinyl lap siding
+  const lap=26;
+  for(let y=Math.floor(J.wallTop);y<H;y+=lap){
+    sctx.fillStyle = (Math.floor(y/lap)%2)? "#e4dfd2":"#ece7da";
+    sctx.fillRect(0,y,W,lap);
+    sctx.fillStyle="rgba(0,0,0,.12)"; sctx.fillRect(0,y+lap-2,W,2);
+  }
+  // windows
+  const win=(x,y)=>{
+    sctx.fillStyle="#3b4a5a"; sctx.fillRect(x,y,110,140);
+    sctx.fillStyle="#9fb6c9"; sctx.fillRect(x+8,y+8,94,124);
+    sctx.strokeStyle="#3b4a5a"; sctx.lineWidth=4;
+    sctx.beginPath(); sctx.moveTo(x+55,y+8); sctx.lineTo(x+55,y+132); sctx.moveTo(x+8,y+70); sctx.lineTo(x+102,y+70); sctx.stroke();
+    sctx.fillStyle="#fff"; sctx.fillRect(x-6,y+140,122,10);
+  };
+  win(W*0.18, H*0.22); win(W*0.62, H*0.22);
+  // bushes along the foundation
+  for(let i=0;i<Math.ceil(W/60);i++){
+    const x=i*60+Math.random()*20, r=26+Math.random()*16;
+    const bg=sctx.createRadialGradient(x,H,r*0.2,x,H,r);
+    bg.addColorStop(0,"#3f6b35"); bg.addColorStop(1,"#2c4d25");
+    sctx.fillStyle=bg;
+    sctx.beginPath(); sctx.arc(x,H+4,r,Math.PI,0); sctx.fill();
+  }
+}
+function blob(ctx,x,y,r,color,alpha){
+  const g=ctx.createRadialGradient(x,y,r*0.15,x,y,r);
+  g.addColorStop(0,color.replace("A",alpha));
+  g.addColorStop(1,color.replace("A","0"));
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill();
+}
+function paintStains(j,W,H){
+  stctx.clearRect(0,0,W,H);
+  dpctx.clearRect(0,0,W,H);
+  if(j.surf==="siding") return; // siding has no PSI-stains, it's all organic
+  stctx.save(); clipSurface(stctx);
+  dpctx.save(); clipSurface(dpctx);
+  const n = j.type==="commercial" ? 9 : (j.size.s==="L"?6:4);
+  for(let i=0;i<n;i++){
+    const y=J.topY+ (0.1+Math.random()*0.88)*(H-J.topY);
+    const [l,r]=surfXAt(y);
+    const x=l+(0.08+Math.random()*0.84)*(r-l);
+    const d=depthFactor(y), rad=(24+Math.random()*48)*d;
+    for(let k=0;k<4;k++){
+      const bx=x+(Math.random()-0.5)*rad, by=y+(Math.random()-0.5)*rad*0.6, br=rad*(0.5+Math.random()*0.6);
+      // soaked-in oil — pressure can't reach it, degreaser can
+      blob(dpctx, bx, by, br, "rgba(30,24,18,A)", "0.62");
+      // surface scum on top — pressure strips this layer
+      blob(stctx, bx, by, br*1.05, "rgba(28,22,16,A)", "0.30");
+    }
+  }
+  // tire tracks running up the driveway — rubber transfer, strips with pressure
+  if(j.type==="driveway"){
+    [0.36,0.64].forEach(u=>{
+      for(let y=J.topY+8;y<H;y+=10){
+        const [l,r]=surfXAt(y), d=depthFactor(y);
+        const x=l+(r-l)*(u+0.02*Math.sin(y/40));
+        stctx.fillStyle="rgba(25,25,25,.5)";
+        stctx.beginPath(); stctx.ellipse(x,y,9*d,6*d,0,0,7); stctx.fill();
+      }
+    });
+  }
+  stctx.restore();
+  dpctx.restore();
+}
+function paintGrime(j,W,H){
+  gctx.clearRect(0,0,W,H);
+  gctx.save(); clipSurface(gctx);
+  // base film
+  const filmColor = j.surf==="siding" ? "rgba(70,110,60,A)" :
+                    j.surf==="pavers" ? "rgba(75,95,55,A)" : "rgba(72,66,52,A)";
+  gctx.fillStyle = filmColor.replace("A","0.55");
+  gctx.fillRect(0,0,W,H);
+  // blotches
+  const n=Math.round(W*H/4500);
+  for(let i=0;i<n;i++){
+    const y=Math.random()*H, d=depthFactor(y);
+    blob(gctx, Math.random()*W, y, (25+Math.random()*60)*d, filmColor, (0.3+Math.random()*0.45).toFixed(2));
+  }
+  if(j.surf==="siding"){
+    // heavy algae streaks running down from laps
+    for(let i=0;i<14;i++){
+      const x=Math.random()*W, w=10+Math.random()*30, h=60+Math.random()*(H*0.6);
+      const g2=gctx.createLinearGradient(0,0,0,h);
+      g2.addColorStop(0,"rgba(58,105,50,.65)"); g2.addColorStop(1,"rgba(58,105,50,0)");
+      gctx.save(); gctx.translate(x,J.wallTop+Math.random()*H*0.35);
+      gctx.fillStyle=g2; gctx.fillRect(0,0,w,h); gctx.restore();
+    }
+  }
+  // edge dark vignette of crud
+  const vg=gctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.35,W/2,H/2,Math.max(W,H)*0.72);
+  vg.addColorStop(0,"rgba(0,0,0,0)"); vg.addColorStop(1,"rgba(40,38,28,.4)");
+  gctx.fillStyle=vg; gctx.fillRect(0,0,W,H);
+  gctx.restore();
+}
+
+/* ---------- dirt accounting ---------- */
+function countDirty(){
+  const stride=6;
+  const gd=gctx.getImageData(0,0,grimeC.width,grimeC.height).data;
+  const sd=stctx.getImageData(0,0,stainC.width,stainC.height).data;
+  const dd=dpctx.getImageData(0,0,deepC.width,deepC.height).data;
+  let any=0,g=0,s=0;
+  for(let i=3;i<gd.length;i+=4*stride){
+    const gg=gd[i]>40, ss=(sd[i]>40||dd[i]>40);
+    if(gg||ss) any++;
+    if(gg) g++;
+    if(ss) s++;
+  }
+  return {any,g,s};
+}
+function sampleProgress(){
+  if(!J||!S.active) return;
+  const d=countDirty();
+  const pct = J.total? Math.max(0, Math.min(100, 100*(1-d.any/J.total))) : 0;
+  updateProgress(pct);
+  // teach the chemistry: grime's gone, stains are holding the meter hostage
+  if(!J.stainHinted && pct<95 && d.g < J.total*0.04 && d.s > J.total*0.015){
+    J.stainHinted=true;
+    flashWarn("That's oil — PSI, not chems!");
+    toast("Dark stains are oil & rubber. SH won't dissolve petroleum — cut them with the wand or surface cleaner.");
+    $("jobNote").innerHTML = `<b style="color:var(--safety-dk)">That remaining shadow is oil soaked into the concrete.</b> You've stripped the surface — pressure won't reach any deeper. Coat it with <b>degreaser</b>, let it dwell a few seconds, and watch it lift.`;
+  }
+}
+function updateProgress(pct){
+  J.pct=pct;
+  $("cleanFill").style.width=pct+"%";
+  $("cleanPct").textContent=Math.floor(pct)+"%";
+  $("btnFinish").disabled = pct<95;
+  $("btnFinish").textContent = pct>=95 ? "Finish job — collect "+fmt$(payoutPreview()) : "Finish job (95% min)";
+}
+
+/* ---------- modes ---------- */
+function setMode(m){ mode=m; updateModeButtons(); }
+function updateModeButtons(){
+  const j=S.active, deck=bestSC();
+  const scOk = j && deck && j.surf!=="siding";
+  const softOk = j && (S.injector||S.xjet);
+  const degOk = j && j.surf!=="siding" && S.degreaser>0;
+  $("mSC").disabled=!scOk;
+  $("mSoft").disabled=!softOk;
+  $("mDeg").disabled=!degOk;
+  $("mSC").textContent = deck? `Surface cleaner · ${deck.inches}"` : (S.scOwned.length? "Surface cleaner — needs more GPM" : "Surface cleaner — none");
+  $("mSoft").textContent = (S.injector||S.xjet)? `Soft wash · SH ${S.sh.toFixed(1)} gal` : "Soft wash — no injector";
+  $("mDeg").textContent = S.degreaser>0? `Degreaser · ${S.degreaser.toFixed(1)} gal` : "Degreaser — none";
+  if(mode==="sc"&&!scOk) mode="wand";
+  if(mode==="soft"&&!softOk) mode="wand";
+  if(mode==="deg"&&!degOk) mode="wand";
+  $("mWand").classList.toggle("on",mode==="wand");
+  $("mSC").classList.toggle("on",mode==="sc");
+  $("mSoft").classList.toggle("on",mode==="soft");
+  $("mDeg").classList.toggle("on",mode==="deg");
+}
+$("mWand").onclick=()=>setMode("wand");
+$("mSC").onclick=()=>{ if(!$("mSC").disabled) setMode("sc"); };
+$("mSoft").onclick=()=>{ if(!$("mSoft").disabled) setMode("soft"); };
+$("mDeg").onclick=()=>{ if(!$("mDeg").disabled) setMode("deg"); };
+
+/* ---------- spraying ---------- */
+function canvasPoint(e){
+  const r=fxC.getBoundingClientRect();
+  return { x:(e.clientX-r.left)*(J.w/r.width), y:(e.clientY-r.top)*(J.h/r.height) };
+}
+/* ---------- spray sound ---------- */
+let AC=null, sprayGain=null, sprayFilter=null, soundOn=true;
+function ensureAudio(){
+  if(AC) return;
+  try{
+    AC=new (window.AudioContext||window.webkitAudioContext)();
+    const buf=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+    const src=AC.createBufferSource(); src.buffer=buf; src.loop=true;
+    sprayFilter=AC.createBiquadFilter(); sprayFilter.type="bandpass";
+    sprayFilter.frequency.value=2400; sprayFilter.Q.value=0.7;
+    sprayGain=AC.createGain(); sprayGain.gain.value=0;
+    src.connect(sprayFilter); sprayFilter.connect(sprayGain); sprayGain.connect(AC.destination);
+    src.start();
+  }catch(e){ AC=null; }
+}
+function setSpray(on){
+  if(!AC||!sprayGain) return;
+  if(!soundOn){ sprayGain.gain.setTargetAtTime(0,AC.currentTime,0.03); return; }
+  const f = mode==="sc"?900 : mode==="wand"?2600 : 1400;
+  const v = on ? (mode==="soft"||mode==="deg" ? 0.045 : 0.11) : 0;
+  sprayFilter.frequency.setTargetAtTime(f,AC.currentTime,0.05);
+  sprayGain.gain.setTargetAtTime(v,AC.currentTime,0.05);
+}
+$("btnSound").onclick=()=>{
+  soundOn=!soundOn;
+  $("btnSound").textContent=soundOn?"🔊":"🔇";
+  if(!soundOn) setSpray(false);
+};
+
+fxC.style.pointerEvents="auto";
+fxC.addEventListener("pointerdown",e=>{
+  if(!J||!S.active) return;
+  ensureAudio(); if(AC&&AC.state==="suspended") AC.resume();
+  setSpray(true);
+  drawing=true; lastPt=canvasPoint(e);
+  fxC.setPointerCapture(e.pointerId);
+  spraySegment(lastPt,lastPt);
+});
+fxC.addEventListener("pointermove",e=>{
+  if(!drawing||!J) return;
+  const p=canvasPoint(e);
+  spraySegment(lastPt,p);
+  lastPt=p;
+});
+["pointerup","pointercancel"].forEach(ev=>fxC.addEventListener(ev,()=>{
+  drawing=false; lastPt=null; setSpray(false);
+  if(J) fctx.clearRect(0,0,J.w,J.h);
+}));
+
+function sprayParams(){
+  const w=S.washer, deck=bestSC();
+  if(mode==="sc"){
+    // strips surface scum & rubber; soaked-in oil stays put
+    return { r: deck.inches*1.6, grime:1, stain: Math.min(1.0, w.psi/3500)*0.6, fx:"sc" };
+  }
+  if(mode==="soft"){
+    const reach = S.xjet?1.25:1;
+    // soft wash applies chems; the fade loop dissolves organic grime over a few seconds
+    return { r: 36*reach, grime:0, stain:0, fx:"foam", drinksSH:true };
+  }
+  if(mode==="deg"){
+    // pump-up sprayer: paint the stains, let it emulsify, rinse with anything
+    return { r: 30, grime:0, stain:0, fx:"foam", drinksDeg:true };
+  }
+  // wand — turbo nozzle strips the surface layer; the soaked-in oil underneath needs degreaser
+  return { r: 13 + w.gpm*2.6, grime:0.95, stain: Math.min(1.0, w.psi/3500)*0.7, fx:"jet" };
+}
+let warnT=null;
+function flashWarn(msg){
+  $("warnTxt").textContent=msg;
+  $("warnFlash").style.opacity=1;
+  clearTimeout(warnT); warnT=setTimeout(()=>$("warnFlash").style.opacity=0,650);
+}
+function spraySegment(a,b){
+  const p=sprayParams();
+  const j=S.active;
+  const dist=Math.hypot(b.x-a.x,b.y-a.y);
+  const steps=Math.max(1, Math.floor(dist/ (p.r*0.35)));
+  for(let i=0;i<=steps;i++){
+    const x=a.x+(b.x-a.x)*i/steps, y=a.y+(b.y-a.y)*i/steps;
+    stamp(x,y,p,j);
+  }
+  drawNozzleFX(b,p, p.r*depthFactor(b.y));
+}
+function eraseSpot(ctx,x,y,rr,alpha){
+  ctx.save();
+  ctx.globalCompositeOperation="destination-out";
+  ctx.fillStyle="#000";
+  ctx.globalAlpha=alpha;
+  ctx.beginPath();
+  if(J.persp) ctx.ellipse(x,y,rr,rr*0.6,0,0,7);
+  else ctx.arc(x,y,rr,0,7);
+  ctx.fill();
+  ctx.restore();
+}
+function chemSpot(ctx,x,y,rr,color){
+  const cg=ctx.createRadialGradient(x,y,rr*0.2,x,y,rr);
+  cg.addColorStop(0,color); cg.addColorStop(1,color.replace(/[\d.]+\)$/,"0)"));
+  ctx.fillStyle=cg;
+  ctx.beginPath();
+  if(J.persp) ctx.ellipse(x,y,rr,rr*0.6,0,0,7);
+  else ctx.arc(x,y,rr,0,7);
+  ctx.fill();
+}
+function stamp(x,y,p,j){
+  const rr = p.r*depthFactor(y);
+  // SH application — paints the treatment layer; the fade loop does the killing
+  if(p.drinksSH){
+    if(S.sh>0){
+      S.sh=Math.max(0,S.sh - rr*0.00012*(S.xjet?0.85:1));
+      if(S.sh===0 && !J.lowSHWarned){ J.lowSHWarned=true; flashWarn("SH tank is dry!"); toast("Out of SH — you're just spraying water now."); }
+      $("mSoft").textContent=`Soft wash · SH ${S.sh.toFixed(1)} gal`;
+      renderHUD();
+      chemSpot(tctx,x,y,rr,"rgba(255,255,255,0.9)");
+    } else {
+      if(!J.lowSHWarned){ J.lowSHWarned=true; flashWarn("SH tank is dry!"); }
+      return; // no chems, no effect
+    }
+  }
+  // degreaser application — same dwell idea, but it eats petroleum stains
+  if(p.drinksDeg){
+    if(S.degreaser>0){
+      S.degreaser=Math.max(0,S.degreaser - rr*0.00010);
+      $("mDeg").textContent=`Degreaser · ${S.degreaser.toFixed(1)} gal`;
+      renderHUD();
+      chemSpot(dctx,x,y,rr,"rgba(178,120,235,0.9)");
+    } else {
+      flashWarn("Degreaser pail is empty!");
+      return;
+    }
+  }
+  // siding damage check: wand or SC on vinyl
+  if(j.surf==="siding" && mode!=="soft" && mode!=="deg"){
+    J.damage += 1;
+    if(J.damage%40===5) flashWarn("You're blasting water behind the vinyl!");
+  }
+  // erase grime (instant — mechanical)
+  if(p.grime>0) eraseSpot(gctx,x,y,rr,p.grime);
+  // erase stains — pressure grinds them out, slowly
+  if(p.stain>0) eraseSpot(stctx,x,y,rr,p.stain);
+}
+/* chemical dwell: treated grime slowly dissolves, like watching algae melt */
+function chemFadeTick(){
+  if(!J||!S.active||!treatC) return;
+  // SH dissolves organic grime wherever it's sitting
+  gctx.save();
+  gctx.globalCompositeOperation="destination-out";
+  gctx.globalAlpha=0.15;
+  gctx.drawImage(treatC,0,0);
+  gctx.restore();
+  // degreaser emulsifies petroleum wherever it's sitting — surface scum AND soaked-in oil
+  [stctx,dpctx].forEach(c=>{
+    c.save();
+    c.globalCompositeOperation="destination-out";
+    c.globalAlpha=0.13;
+    c.drawImage(treatD,0,0);
+    c.restore();
+  });
+  // chems slowly rinse off / neutralize
+  [tctx,dctx].forEach(c=>{
+    c.save();
+    c.globalCompositeOperation="destination-out";
+    c.fillStyle="#000";
+    c.globalAlpha=0.07;
+    c.fillRect(0,0,J.w,J.h);
+    c.restore();
+  });
+  // show the foam sitting on the surface — light enough to see through
+  if(!drawing){
+    fctx.clearRect(0,0,J.w,J.h);
+    fctx.save(); fctx.globalAlpha=0.22; fctx.drawImage(treatC,0,0); fctx.drawImage(treatD,0,0); fctx.restore();
+  }
+}
+function drawNozzleFX(pt,p,rr){
+  fctx.clearRect(0,0,J.w,J.h);
+  // foam sitting on the surface stays visible while you work
+  fctx.save(); fctx.globalAlpha=0.22; fctx.drawImage(treatC,0,0); fctx.drawImage(treatD,0,0); fctx.restore();
+  fctx.save();
+  const ox=J.w/2, oy=J.h+16; // you, standing at the bottom of the scene
+  const ry = J.persp? 0.6 : 1;
+  if(p.fx==="foam"){
+    // arcing chemical stream from the gun
+    const col = mode==="deg" ? "rgba(178,120,235," : "rgba(160,230,240,";
+    fctx.strokeStyle=col+"0.75)"; fctx.lineWidth=4; fctx.lineCap="round";
+    fctx.beginPath(); fctx.moveTo(ox,oy);
+    fctx.quadraticCurveTo((ox+pt.x)/2, Math.min(oy,pt.y)-70, pt.x,pt.y);
+    fctx.stroke();
+    fctx.fillStyle=col+"0.5)";
+    for(let i=0;i<8;i++){
+      fctx.beginPath();
+      fctx.ellipse(pt.x+(Math.random()-.5)*rr*1.6, pt.y+(Math.random()-.5)*rr*ry*1.2, 3+Math.random()*6, (3+Math.random()*6)*ry, 0,0,7);
+      fctx.fill();
+    }
+  } else {
+    // the lance in your hands
+    const lg=fctx.createLinearGradient(ox,oy,pt.x,pt.y);
+    lg.addColorStop(0,"#1b1e24"); lg.addColorStop(0.85,"#5a6068"); lg.addColorStop(1,"#9aa1aa");
+    fctx.strokeStyle=lg; fctx.lineWidth=6; fctx.lineCap="round";
+    fctx.beginPath(); fctx.moveTo(ox,oy); fctx.lineTo(pt.x,pt.y); fctx.stroke();
+    if(p.fx==="sc"){
+      // spinning deck
+      fctx.strokeStyle="rgba(255,255,255,.9)"; fctx.lineWidth=3;
+      fctx.beginPath(); fctx.ellipse(pt.x,pt.y,rr,rr*ry,0,0,7); fctx.stroke();
+      const ang=(Date.now()/50)%7;
+      fctx.lineWidth=1.5; fctx.strokeStyle="rgba(255,255,255,.5)";
+      fctx.beginPath();
+      fctx.moveTo(pt.x,pt.y); fctx.lineTo(pt.x+Math.cos(ang)*rr, pt.y+Math.sin(ang)*rr*ry);
+      fctx.moveTo(pt.x,pt.y); fctx.lineTo(pt.x-Math.cos(ang)*rr, pt.y-Math.sin(ang)*rr*ry);
+      fctx.stroke();
+      // mist halo
+      fctx.fillStyle="rgba(255,255,255,.12)";
+      fctx.beginPath(); fctx.ellipse(pt.x,pt.y,rr*1.3,rr*ry*1.3,0,0,7); fctx.fill();
+    } else {
+      // turbo nozzle splash
+      fctx.fillStyle="rgba(255,255,255,.3)";
+      fctx.beginPath(); fctx.ellipse(pt.x,pt.y,rr*1.15,rr*ry*1.15,0,0,7); fctx.fill();
+      fctx.strokeStyle="rgba(255,255,255,.9)"; fctx.lineWidth=2;
+      for(let i=0;i<7;i++){
+        const a=Math.random()*7;
+        fctx.beginPath(); fctx.moveTo(pt.x,pt.y);
+        fctx.lineTo(pt.x+Math.cos(a)*rr*1.4, pt.y+Math.sin(a)*rr*ry*1.4);
+        fctx.stroke();
+      }
+      // flying droplets
+      fctx.fillStyle="rgba(255,255,255,.85)";
+      for(let i=0;i<6;i++){
+        fctx.beginPath();
+        fctx.arc(pt.x+(Math.random()-.5)*rr*3, pt.y-Math.random()*rr*1.6, 1.6,0,7);
+        fctx.fill();
+      }
+    }
+  }
+  fctx.restore();
+}
+
+/* ---------- payout ---------- */
+function payoutPreview(){
+  const j=S.active; if(!j||!J) return 0;
+  let pay=j.pay;
+  const el=(Date.now()-J.t0)/1000;
+  if(el<=j.size.par) pay=Math.round(pay*1.15);
+  if(J.pct>=99) pay+=Math.round(j.pay*0.10);
+  pay-=j.size.fuel;
+  pay-=Math.min(300, Math.round(J.damage*0.6));
+  return pay;
+}
+$("btnFinish").onclick=()=>{
+  const j=S.active; if(!j||J.pct<95) return;
+  const el=(Date.now()-J.t0)/1000;
+  let pay=j.pay, lines=[`Base: ${fmt$(j.pay)}`];
+  if(el<=j.size.par){ const tip=Math.round(j.pay*0.15); pay+=tip; lines.push(`Beat par — tip +${fmt$(tip)}`); }
+  if(J.pct>=99){ const b=Math.round(j.pay*0.10); pay+=b; lines.push(`Spotless bonus +${fmt$(b)}`); }
+  lines.push(`Fuel −${fmt$(j.size.fuel)}`); pay-=j.size.fuel;
+  if(J.damage>0){ const d=Math.min(300, Math.round(J.damage*0.6)); pay-=d; lines.push(`Siding damage −${fmt$(d)} 😬`); }
+  S.cash+=pay; S.jobsDone++;
+  j.done=true; S.active=null;
+  // rep
+  let pts=1; if(J.pct>=99) pts++; if(el<=j.size.par) pts++; if(J.damage>200) pts=0;
+  S.repPts+=pts;
+  const need=[3,7,13,21,31];
+  while(S.rep<5 && S.repPts>=need[S.rep]) S.rep++;
+  clearInterval(timerInt); clearInterval(sampleInt); clearInterval(fadeInt);
+  $("tabJob").classList.add("disabled");
+  renderHUD(); renderPhone(); renderShop(); showScreen("phone");
+  overlay("Job complete", "+"+fmt$(pay), lines.join("  ·  ")+
+    (pts>=3?"  —  Customer is telling the whole cul-de-sac about you.":""), "Next customer");
+  if(!S.won && S.cash>=30000){
+    S.won=true;
+    setTimeout(()=>overlay("TREASURE COAST LEGEND","$30,000",
+      "From a $5K stake to a real operation. The phone won't stop ringing, the trailer's paid off, and somewhere a dirty driveway trembles. You can keep playing forever — the grime never sleeps.","Keep building"),300);
+  }
+};
+$("btnWalk").onclick=()=>{
+  if(!S.active) return;
+  const j=S.active;
+  S.active=null; clearInterval(timerInt); clearInterval(sampleInt); clearInterval(fadeInt);
+  $("tabJob").classList.add("disabled");
+  toast(`You walked off the ${j.label.toLowerCase()}. ${j.name} is leaving a one-star review.`);
+  S.repPts=Math.max(0,S.repPts-1);
+  j.done=true; j.lost=true; // job lost
+  renderHUD(); renderPhone(); showScreen("phone");
+};
+
+/* =========================================================
+   TITLE WASH-IN
+   ========================================================= */
+(function titleWash(){
+  const c=$("titleCanvas"), ctx=c.getContext("2d");
+  const W=c.width,H=c.height;
+  // clean layer: title text
+  ctx.fillStyle="#23272e";
+  ctx.font="900 64px Arial Black, Arial, sans-serif";
+  ctx.textBaseline="middle";
+  ctx.fillText("ROYALE WITH GRIME", 8, H/2+4);
+  ctx.fillStyle="#ff5a1f";
+  ctx.fillRect(8,H-18,560,8);
+  // grime overlay on separate canvas
+  const g=document.createElement("canvas"); g.width=W; g.height=H;
+  const gx=g.getContext("2d");
+  gx.fillStyle="rgba(72,66,52,.92)"; gx.fillRect(0,0,W,H);
+  for(let i=0;i<160;i++){
+    const x=Math.random()*W,y=Math.random()*H,r=10+Math.random()*30;
+    const gr=gx.createRadialGradient(x,y,1,x,y,r);
+    gr.addColorStop(0,"rgba(50,60,35,.5)"); gr.addColorStop(1,"rgba(50,60,35,0)");
+    gx.fillStyle=gr; gx.beginPath(); gx.arc(x,y,r,0,7); gx.fill();
+  }
+  let t=0;
+  function frame(){
+    t+=1;
+    const sweepX = -60 + t*14;
+    gx.save(); gx.globalCompositeOperation="destination-out";
+    gx.fillStyle="#000";
+    for(let i=0;i<6;i++){
+      gx.beginPath();
+      gx.arc(sweepX+Math.random()*30, Math.random()*H, 34+Math.random()*22, 0, 7);
+      gx.fill();
+    }
+    gx.restore();
+    // composite
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle="#23272e";
+    ctx.font="900 64px Arial Black, Arial, sans-serif";
+    ctx.fillText("ROYALE WITH GRIME", 8, H/2+4);
+    ctx.fillStyle="#ff5a1f"; ctx.fillRect(8,H-18,560,8);
+    ctx.drawImage(g,0,0);
+    // wand sparkle
+    if(sweepX<W+80){
+      ctx.strokeStyle="rgba(255,255,255,.9)"; ctx.lineWidth=2;
+      for(let i=0;i<5;i++){
+        const a=Math.random()*7;
+        ctx.beginPath(); ctx.moveTo(sweepX,H/2);
+        ctx.lineTo(sweepX+Math.cos(a)*40, H/2+Math.sin(a)*40);
+        ctx.stroke();
+      }
+      requestAnimationFrame(frame);
+    } else {
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle="#23272e";
+      ctx.font="900 64px Arial Black, Arial, sans-serif";
+      ctx.fillText("ROYALE WITH GRIME", 8, H/2+4);
+      ctx.fillStyle="#ff5a1f"; ctx.fillRect(8,H-18,560,8);
+    }
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ---------------- boot ---------------- */
+renderHUD(); renderShop(); renderPhone();
+toast("You've got $5,000 and a dream. Buy a machine.");
+</script>
+</body>
+</html>
