@@ -338,77 +338,6 @@
     color: var(--gold);
   }
 
-  /* PRICING */
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
-    justify-items: center;
-    max-width: 1000px;
-    margin: 0 auto;
-  }
-
-  .price-card {
-    background: var(--card);
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    padding: 24px;
-    transition: border-color .2s;
-  }
-
-  .price-card:hover { border-color: var(--dim); }
-
-  .price-card.featured {
-    border: 1.5px solid var(--gold);
-  }
-
-  .price-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    background: var(--gold);
-    color: var(--black);
-    padding: 3px 10px;
-    border-radius: 3px;
-    margin-bottom: 14px;
-  }
-
-  .price-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: .06em;
-    color: var(--white);
-    margin-bottom: 8px;
-  }
-
-  .price-amount {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    letter-spacing: .02em;
-    color: var(--gold);
-    line-height: 1;
-    margin-bottom: 16px;
-  }
-
-  .price-amount span {
-    font-size: 20px;
-    color: var(--muted);
-  }
-
-  .price-list {
-    list-style: none;
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 2;
-  }
-
-  .price-list li::before {
-    content: '— ';
-    color: var(--gold);
-  }
-
   /* BOOKING */
   #book {
     background: var(--dark);
@@ -690,7 +619,6 @@
   </div>
   <ul class="nav-links" id="navLinks">
     <li><a href="#services">Services</a></li>
-    <li><a href="#pricing">Pricing</a></li>
     <li><a href="#results">Results</a></li>
     <li><a href="#reviews">Reviews</a></li>
     <li><a href="book.html">Book</a></li>
@@ -709,7 +637,7 @@
 
   <div class="hero-btns">
     <a href="book.html" class="btn-gold">Get a free quote</a>
-    <a href="#pricing" class="btn-outline">View pricing</a>
+    <a href="#services" class="btn-outline">View services</a>
   </div>
 </div>
 
@@ -767,96 +695,6 @@
       <div class="svc-name">House Wash &amp; Concrete Combo</div>
       <div class="svc-desc">Get your home's exterior and concrete cleaned in one visit. We soft wash your entire house exterior removing mold, algae, and mildew at the root, then surface clean your driveway, walkways, and concrete pads for a streak-free finish. Bundled together for less than booking separately. Priced by square footage.</div>
       <div class="svc-price">$0.22/sqft</div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section id="pricing" style="background: var(--dark);text-align:center;">
-  <p class="section-eyebrow reveal">Transparent pricing</p>
-  <h2 class="section-title reveal">No surprises</h2>
-  <p class="section-body reveal" style="margin:0 auto 40px;">All services priced by square footage or linear foot. Free estimates on any job. Recurring customers save 10% on every return visit.</p>
-  <div class="pricing-grid reveal">
-    <div class="price-card">
-      <div class="price-name">House Wash</div>
-      <div class="price-amount">$0.25<span>/sqft</span></div>
-      <ul class="price-list">
-        <li>Full exterior soft wash</li>
-        <li>Mold &amp; algae treatment</li>
-        <li>Minimum $300</li>
-        <li>Before &amp; after photos</li>
-      </ul>
-    </div>
-    <div class="price-card">
-      <div class="price-name">Concrete Cleaning</div>
-      <div class="price-amount">$0.20<span>/sqft</span></div>
-      <ul class="price-list">
-        <li>Driveways, walkways, pads</li>
-        <li>Edge &amp; perimeter detail</li>
-        <li>Minimum $150</li>
-        <li>Before &amp; after photos</li>
-      </ul>
-    </div>
-    <div class="price-card featured">
-      <div class="price-badge">Best value</div>
-      <div class="price-name">House Wash &amp; Concrete Combo</div>
-      <div class="price-amount">$0.22<span>/sqft</span></div>
-      <ul class="price-list">
-        <li>House + concrete at flat $0.22/sqft</li>
-        <li>Full exterior soft wash</li>
-        <li>Driveway surface clean</li>
-        <li>Before &amp; after photos</li>
-      </ul>
-    </div>
-    <div class="price-card">
-      <div class="price-name">Paver Cleaning</div>
-      <div class="price-amount">$0.20<span>/sqft</span></div>
-      <ul class="price-list">
-        <li>Driveways, patios, walkways</li>
-        <li>Sand joint safe method</li>
-        <li>Minimum $150</li>
-        <li>Before &amp; after photos</li>
-      </ul>
-    </div>
-    <div class="price-card">
-      <div class="price-name">Deck Cleaning</div>
-      <div class="price-amount">$0.20<span>/sqft</span></div>
-      <ul class="price-list">
-        <li>Wood, composite, concrete</li>
-        <li>Algae &amp; mildew removal</li>
-        <li>Minimum $150</li>
-        <li>Before &amp; after photos</li>
-      </ul>
-    </div>
-    <div class="price-card">
-      <div class="price-name">Fence Cleaning</div>
-      <div class="price-amount">$1.00<span>/lin ft</span></div>
-      <ul class="price-list">
-        <li>Vinyl, wood, aluminum</li>
-        <li>Surface-safe method</li>
-        <li>Minimum $100</li>
-        <li>Before &amp; after photos</li>
-      </ul>
-    </div>
-    <div class="price-card">
-      <div class="price-name">Trash Bin Cleaning</div>
-      <div class="price-amount">$10<span>/bin</span></div>
-      <ul class="price-list">
-        <li>Pressure washed &amp; sanitized</li>
-        <li>Deodorized fresh</li>
-        <li>Just $5/bin as an add-on</li>
-        <li>Pair with any service &amp; save</li>
-      </ul>
-    </div>
-    <div class="price-card">
-      <div class="price-name">Roof Wash</div>
-      <div class="price-amount">$0.26<span>/sqft</span></div>
-      <ul class="price-list">
-        <li>Soft wash from the ground</li>
-        <li>Kills algae &amp; black streaks</li>
-        <li>Minimum $300</li>
-        <li>Before &amp; after photos</li>
-      </ul>
     </div>
   </div>
 </section>
@@ -1074,7 +912,7 @@
     <div class="footer-links-col">
       <h4>Company</h4>
       <ul>
-        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#services">Services</a></li>
         <li><a href="book.html">Book online</a></li>
         <li><a href="#area">Service area</a></li>
       </ul>
