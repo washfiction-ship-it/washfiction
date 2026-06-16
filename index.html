@@ -131,13 +131,13 @@
 
   /* HERO */
   .hero {
-    min-height: 92vh;
+    min-height: 82vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 80px 5% 60px;
+    padding: 70px 5% 40px;
     position: relative;
     overflow: hidden;
   }
@@ -148,6 +148,61 @@
     inset: 0;
     background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,179,112,0.04) 0%, transparent 70%);
     pointer-events: none;
+  }
+
+  .hero-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(30px, 6vw, 52px);
+    line-height: 1;
+    letter-spacing: .02em;
+    color: var(--white);
+    margin: 6px 0 0;
+    opacity: 0;
+    animation: fadeUp .6s .28s forwards;
+  }
+  .hero-sub {
+    font-size: clamp(14px, 2.4vw, 16px);
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 540px;
+    line-height: 1.6;
+    margin: 16px auto 30px;
+    opacity: 0;
+    animation: fadeUp .6s .4s forwards;
+  }
+  .hero-proof {
+    font-size: 12px;
+    letter-spacing: .08em;
+    color: var(--gold);
+    margin-top: 22px;
+    opacity: 0;
+    animation: fadeUp .6s .6s forwards;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp .6s .8s forwards;
+  }
+  .hero-scroll-arrow {
+    font-size: 18px;
+    color: var(--gold);
+    animation: bounce 1.8s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
   }
 
   .hero-location {
@@ -535,40 +590,101 @@
     transform: translateY(0);
   }
 
-  /* BEFORE / AFTER PAIR */
-  .ba-pair {
+  /* BEFORE / AFTER — AUTO SLIDESHOW (side by side) */
+  .ba-carousel {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    background: #000;
+  }
+  .ba-track {
+    display: flex;
+    transition: transform .55s cubic-bezier(.4,0,.2,1);
+  }
+  .ba-slide {
+    min-width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 4px;
   }
   .ba-pair-item {
     position: relative;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 0.5px solid var(--border);
     aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #000;
   }
-  .ba-pair-img {
+  .ba-pair-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
-  .ba-pair-label {
+  .ba-tag {
     position: absolute;
     bottom: 12px;
-    left: 12px;
     font-size: 11px;
     letter-spacing: .1em;
     text-transform: uppercase;
-    color: var(--white);
-    background: rgba(8,8,8,0.75);
     padding: 5px 12px;
     border-radius: 3px;
+    z-index: 3;
+    pointer-events: none;
   }
-  .ba-pair-label-after {
-    background: var(--gold);
-    color: #080808;
+  .ba-tag-before { left: 12px; background: rgba(8,8,8,0.78); color: var(--white); }
+  .ba-tag-after { right: 12px; background: var(--gold); color: #080808; }
+
+  .ba-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(8,8,8,0.6);
+    color: var(--white);
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+  }
+  .ba-nav:hover { background: var(--gold); color: #080808; }
+  .ba-prev { left: 10px; }
+  .ba-next { right: 10px; }
+
+  .ba-caption {
+    font-size: 13px;
+    letter-spacing: .04em;
+    color: var(--white);
+    margin-top: 16px;
+    font-weight: 500;
+  }
+  .ba-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .ba-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+  }
+  .ba-dot.active { background: var(--gold); transform: scale(1.3); }
+  .ba-hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 14px;
+    letter-spacing: .03em;
   }
 
   /* JOB VIDEO — iPhone portrait */
@@ -633,12 +749,22 @@
 <!-- HERO -->
 <div class="hero">
   <p class="hero-location">Port Saint Lucie &middot; Stuart &middot; Palm City &middot; Treasure Coast</p>
-  <img src="logo.svg" alt="Wash Fiction LLC" style="width:min(600px,90%);height:auto;margin-bottom:16px;opacity:0;animation:fadeUp .6s .15s forwards;">
+  <img src="logo.svg" alt="Wash Fiction LLC" style="width:min(340px,70%);height:auto;margin-bottom:4px;opacity:0;animation:fadeUp .6s .15s forwards;">
+
+  <h1 class="hero-value">The clean your home's been waiting for.</h1>
+  <p class="hero-sub">Professional house washing, roof &amp; driveway cleaning across the Treasure Coast. Licensed, insured, and locally owned &mdash; with free quotes and before &amp; after photos on every job.</p>
 
   <div class="hero-btns">
     <a href="book.html" class="btn-gold">Get a free quote</a>
-    <a href="#services" class="btn-outline">View services</a>
+    <a href="#results" class="btn-outline">See our work</a>
   </div>
+
+  <p class="hero-proof">★★★★★ &nbsp;Trusted by Treasure Coast homeowners</p>
+
+  <a href="#services" class="hero-scroll" aria-label="Scroll down">
+    <span>See what we do</span>
+    <span class="hero-scroll-arrow">&#8964;</span>
+  </a>
 </div>
 
 <!-- TRUST BAR -->
@@ -705,73 +831,86 @@
   <h2 class="section-title reveal">Before &amp; After</h2>
   <p class="section-body reveal" style="margin:0 auto 40px;">Real results from real Treasure Coast jobs.</p>
 
-  <div class="reveal" style="max-width:800px;margin:0 auto;">
+  <div class="reveal" style="max-width:760px;margin:0 auto;">
 
-    <div class="ba-pair" style="margin-bottom:28px;">
-      <div class="ba-pair-item">
-        <img src="job1-before.PNG" alt="dirty driveway before pressure washing Port Saint Lucie FL" class="ba-pair-img">
-        <div class="ba-pair-label">Before</div>
+    <div class="ba-carousel" id="baCarousel">
+      <div class="ba-track" id="baTrack">
+
+        <div class="ba-slide" data-label="Driveway Cleaning &middot; Port Saint Lucie">
+          <div class="ba-pair-item">
+            <img src="job1-before.PNG" alt="dirty driveway before pressure washing Port Saint Lucie FL" loading="lazy">
+            <div class="ba-tag ba-tag-before">Before</div>
+          </div>
+          <div class="ba-pair-item">
+            <img src="job1-after.JPG" alt="clean driveway after pressure washing Port Saint Lucie FL" loading="lazy">
+            <div class="ba-tag ba-tag-after">After</div>
+          </div>
+        </div>
+
+        <div class="ba-slide" data-label="House Wash &middot; Treasure Coast">
+          <div class="ba-pair-item">
+            <img src="job2-before.jpg" alt="before pressure washing Port Saint Lucie FL" loading="lazy">
+            <div class="ba-tag ba-tag-before">Before</div>
+          </div>
+          <div class="ba-pair-item">
+            <img src="job2-after.jpg" alt="after pressure washing Port Saint Lucie FL" loading="lazy">
+            <div class="ba-tag ba-tag-after">After</div>
+          </div>
+        </div>
+
+        <div class="ba-slide" data-label="Surface Cleaning &middot; Treasure Coast">
+          <div class="ba-pair-item">
+            <img src="job3-before.jpg" alt="before pressure washing Treasure Coast FL" loading="lazy">
+            <div class="ba-tag ba-tag-before">Before</div>
+          </div>
+          <div class="ba-pair-item">
+            <img src="job3-after.JPG" alt="after pressure washing Treasure Coast FL" loading="lazy">
+            <div class="ba-tag ba-tag-after">After</div>
+          </div>
+        </div>
+
+        <div class="ba-slide" data-label="Soft Wash &middot; Port Saint Lucie">
+          <div class="ba-pair-item">
+            <img src="job4-before.PNG" alt="before soft wash Port Saint Lucie FL" loading="lazy">
+            <div class="ba-tag ba-tag-before">Before</div>
+          </div>
+          <div class="ba-pair-item">
+            <img src="job4-after.JPG" alt="after soft wash Port Saint Lucie FL" loading="lazy">
+            <div class="ba-tag ba-tag-after">After</div>
+          </div>
+        </div>
+
+        <div class="ba-slide" data-label="Pressure Washing &middot; Port Saint Lucie">
+          <div class="ba-pair-item">
+            <img src="job5-before.JPG" alt="before pressure washing Port Saint Lucie FL" loading="lazy">
+            <div class="ba-tag ba-tag-before">Before</div>
+          </div>
+          <div class="ba-pair-item">
+            <img src="job5-after.JPG" alt="after pressure washing Port Saint Lucie FL" loading="lazy">
+            <div class="ba-tag ba-tag-after">After</div>
+          </div>
+        </div>
+
+        <div class="ba-slide" data-label="Exterior Cleaning &middot; Treasure Coast">
+          <div class="ba-pair-item">
+            <img src="job6-before.JPG" alt="before pressure washing Treasure Coast FL" loading="lazy">
+            <div class="ba-tag ba-tag-before">Before</div>
+          </div>
+          <div class="ba-pair-item">
+            <img src="job6-after.JPG" alt="after pressure washing Treasure Coast FL" loading="lazy">
+            <div class="ba-tag ba-tag-after">After</div>
+          </div>
+        </div>
+
       </div>
-      <div class="ba-pair-item">
-        <img src="job1-after.JPG" alt="clean driveway after pressure washing Port Saint Lucie FL" class="ba-pair-img">
-        <div class="ba-pair-label ba-pair-label-after">After</div>
-      </div>
+
+      <button class="ba-nav ba-prev" id="baPrev" aria-label="Previous">&#10094;</button>
+      <button class="ba-nav ba-next" id="baNext" aria-label="Next">&#10095;</button>
     </div>
 
-    <div class="ba-pair" style="margin-bottom:28px;">
-      <div class="ba-pair-item">
-        <img src="job2-before.jpg" alt="before pressure washing Port Saint Lucie FL" class="ba-pair-img">
-        <div class="ba-pair-label">Before</div>
-      </div>
-      <div class="ba-pair-item">
-        <img src="job2-after.jpg" alt="after pressure washing Port Saint Lucie FL" class="ba-pair-img">
-        <div class="ba-pair-label ba-pair-label-after">After</div>
-      </div>
-    </div>
-
-    <div class="ba-pair" style="margin-bottom:28px;">
-      <div class="ba-pair-item">
-        <img src="job3-before.jpg" alt="before pressure washing Treasure Coast FL" class="ba-pair-img">
-        <div class="ba-pair-label">Before</div>
-      </div>
-      <div class="ba-pair-item">
-        <img src="job3-after.JPG" alt="after pressure washing Treasure Coast FL" class="ba-pair-img">
-        <div class="ba-pair-label ba-pair-label-after">After</div>
-      </div>
-    </div>
-
-    <div class="ba-pair" style="margin-bottom:28px;">
-      <div class="ba-pair-item">
-        <img src="job4-before.PNG" alt="before soft wash Port Saint Lucie FL" class="ba-pair-img">
-        <div class="ba-pair-label">Before</div>
-      </div>
-      <div class="ba-pair-item">
-        <img src="job4-after.JPG" alt="after soft wash Port Saint Lucie FL" class="ba-pair-img">
-        <div class="ba-pair-label ba-pair-label-after">After</div>
-      </div>
-    </div>
-
-    <div class="ba-pair" style="margin-bottom:28px;">
-      <div class="ba-pair-item">
-        <img src="job5-before.JPG" alt="before pressure washing Port Saint Lucie FL" class="ba-pair-img">
-        <div class="ba-pair-label">Before</div>
-      </div>
-      <div class="ba-pair-item">
-        <img src="job5-after.JPG" alt="after pressure washing Port Saint Lucie FL" class="ba-pair-img">
-        <div class="ba-pair-label ba-pair-label-after">After</div>
-      </div>
-    </div>
-
-    <div class="ba-pair">
-      <div class="ba-pair-item">
-        <img src="job6-before.JPG" alt="before pressure washing Treasure Coast FL" class="ba-pair-img">
-        <div class="ba-pair-label">Before</div>
-      </div>
-      <div class="ba-pair-item">
-        <img src="job6-after.JPG" alt="after pressure washing Treasure Coast FL" class="ba-pair-img">
-        <div class="ba-pair-label ba-pair-label-after">After</div>
-      </div>
-    </div>
+    <p class="ba-caption" id="baCaption">Driveway Cleaning &middot; Port Saint Lucie</p>
+    <div class="ba-dots" id="baDots"></div>
+    <p class="ba-hint">Real results from real Treasure Coast jobs</p>
 
     <div class="ba-video-wrap reveal">
       <video class="ba-video" autoplay muted loop playsinline preload="metadata">
@@ -951,6 +1090,68 @@
   }, { threshold: 0.1 });
 
   reveals.forEach(el => observer.observe(el));
+
+  // ===== Before/After auto slideshow (side by side) =====
+  (function() {
+    const carousel = document.getElementById('baCarousel');
+    if (!carousel) return;
+    const track = document.getElementById('baTrack');
+    const slides = Array.from(track.children);
+    const caption = document.getElementById('baCaption');
+    const dotsWrap = document.getElementById('baDots');
+    const prevBtn = document.getElementById('baPrev');
+    const nextBtn = document.getElementById('baNext');
+    let current = 0;
+    let timer = null;
+    const INTERVAL = 4000;
+
+    // Build dots
+    slides.forEach((s, i) => {
+      const d = document.createElement('button');
+      d.className = 'ba-dot' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Go to job ' + (i + 1));
+      d.addEventListener('click', () => { goTo(i); restart(); });
+      dotsWrap.appendChild(d);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    function goTo(i) {
+      current = (i + slides.length) % slides.length;
+      track.style.transform = 'translateX(-' + (current * 100) + '%)';
+      dots.forEach((d, di) => d.classList.toggle('active', di === current));
+      const label = slides[current].dataset.label;
+      if (caption) caption.innerHTML = label;
+    }
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+
+    function start() { timer = setInterval(next, INTERVAL); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function restart() { stop(); start(); }
+
+    prevBtn.addEventListener('click', () => { prev(); restart(); });
+    nextBtn.addEventListener('click', () => { next(); restart(); });
+
+    // Pause on hover (desktop)
+    carousel.addEventListener('mouseenter', stop);
+    carousel.addEventListener('mouseleave', start);
+
+    // Swipe support (mobile)
+    let startX = 0;
+    carousel.addEventListener('touchstart', e => { startX = e.touches[0].clientX; stop(); }, { passive: true });
+    carousel.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (dx > 40) prev();
+      else if (dx < -40) next();
+      start();
+    }, { passive: true });
+
+    // Only auto-advance while the section is on screen
+    const vis = new IntersectionObserver((entries) => {
+      entries.forEach(en => { en.isIntersecting ? start() : stop(); });
+    }, { threshold: 0.25 });
+    vis.observe(carousel);
+  })();
 
   // Play job video only when scrolled into view
   const jobVideo = document.querySelector('.ba-video');
