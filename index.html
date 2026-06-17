@@ -638,23 +638,26 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    border: none;
-    background: rgba(8,8,8,0.6);
-    color: var(--white);
-    font-size: 16px;
+    border: 2px solid #080808;
+    background: var(--gold);
+    color: #080808;
+    font-size: 22px;
+    font-weight: 700;
     cursor: pointer;
     z-index: 6;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background .2s;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.55);
+    transition: transform .15s, background .2s;
   }
-  .ba-nav:hover { background: var(--gold); color: #080808; }
-  .ba-prev { left: 10px; }
-  .ba-next { right: 10px; }
+  .ba-nav:hover { background: var(--gold-light, #e0c87f); }
+  .ba-nav:active { transform: translateY(-50%) scale(0.92); }
+  .ba-prev { left: 12px; }
+  .ba-next { right: 12px; }
 
   .ba-caption {
     font-size: 13px;
@@ -1209,16 +1212,18 @@
     const nextBtn = document.getElementById('baNext');
     let current = 0;
     let timer = null;
-    const INTERVAL = 4000;
+    const INTERVAL = 5000;
 
-    // Build dots
-    slides.forEach((s, i) => {
-      const d = document.createElement('button');
-      d.className = 'ba-dot' + (i === 0 ? ' active' : '');
-      d.setAttribute('aria-label', 'Go to job ' + (i + 1));
-      d.addEventListener('click', () => { goTo(i); restart(); });
-      dotsWrap.appendChild(d);
-    });
+    // Build dots (guard against double-build)
+    if (dotsWrap.children.length === 0) {
+      slides.forEach((s, i) => {
+        const d = document.createElement('button');
+        d.className = 'ba-dot' + (i === 0 ? ' active' : '');
+        d.setAttribute('aria-label', 'Go to job ' + (i + 1));
+        d.addEventListener('click', () => { goTo(i); restart(); });
+        dotsWrap.appendChild(d);
+      });
+    }
     const dots = Array.from(dotsWrap.children);
 
     function goTo(i) {
@@ -1231,9 +1236,10 @@
     function next() { goTo(current + 1); }
     function prev() { goTo(current - 1); }
 
-    function start() { timer = setInterval(next, INTERVAL); }
+    // Single-timer guard: stop() always clears before start() sets a new one
+    function start() { stop(); timer = setInterval(next, INTERVAL); }
     function stop() { if (timer) { clearInterval(timer); timer = null; } }
-    function restart() { stop(); start(); }
+    function restart() { start(); }
 
     prevBtn.addEventListener('click', () => { prev(); restart(); });
     nextBtn.addEventListener('click', () => { next(); restart(); });
