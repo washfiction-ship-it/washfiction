@@ -790,12 +790,6 @@
       <label for="qf-phone">Phone</label>
       <input type="tel" id="qf-phone" name="phone" placeholder="(000) 000-0000" required autocomplete="tel" inputmode="tel">
 
-      <label for="qf-email">Email</label>
-      <input type="email" id="qf-email" name="email" placeholder="you@email.com" required autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false">
-
-      <label for="qf-address">Property Address</label>
-      <input type="text" id="qf-address" name="address" placeholder="Street, city" required autocomplete="street-address" autocapitalize="words">
-
       <label for="qf-service">Service Needed</label>
       <select id="qf-service" name="service" required>
         <option value="" disabled selected>Select a service</option>
@@ -890,8 +884,28 @@
   reveals.forEach(el => observer.observe(el));
 
   // Quote form submission via AJAX
+  // Phone taps (calls are conversions too)
+  document.querySelectorAll('a[href^="tel:"]').forEach(a => {
+    a.addEventListener('click', () => {
+      if (typeof gtag === 'function') {
+        gtag('event', 'phone_click', { 'event_category': 'contact', 'event_label': 'book_page' });
+      }
+    });
+  });
+
   const quoteForm = document.getElementById('quoteForm');
   if (quoteForm) {
+    // form_start: fires once on first field focus
+    let formStarted = false;
+    quoteForm.addEventListener('focusin', () => {
+      if (!formStarted) {
+        formStarted = true;
+        if (typeof gtag === 'function') {
+          gtag('event', 'form_start', { 'event_category': 'quote_request', 'event_label': 'book_page_form' });
+        }
+      }
+    });
+
     quoteForm.addEventListener('submit', async function(e) {
       e.preventDefault();
       const btn = quoteForm.querySelector('button[type="submit"]');
