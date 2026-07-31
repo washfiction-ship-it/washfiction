@@ -1,4 +1,21 @@
 /* Wash Fiction V2 — shared behavior + conversion tracking */
+/* Google tag (gtag.js) event - delayed navigation helper
+   Call gtagSendEvent(url) on an action that should navigate after the
+   conversion is sent, or gtagSendEvent() to fire it with no navigation. */
+function gtagSendEvent(url) {
+  var callback = function () {
+    if (typeof url === 'string') {
+      window.location = url;
+    }
+  };
+  gtag('event', 'ads_conversion_Submit_lead_form_1', {
+    'event_callback': callback,
+    'event_timeout': 2000,
+    // <event_parameters>
+  });
+  return false;
+}
+
 (function () {
   var PAGE = document.body.dataset.page || 'page';
 
@@ -114,6 +131,8 @@
             var ok = document.getElementById('formSuccess');
             if (ok) ok.style.display = 'block';
             wfEvent('generate_lead', { event_category: 'quote_request', event_label: formLabel });
+            /* Google Ads conversion — fires only on confirmed submission */
+            gtagSendEvent();
           } else { fail(); }
         })
         .catch(fail);
